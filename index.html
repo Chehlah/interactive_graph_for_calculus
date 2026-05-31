@@ -194,15 +194,1981 @@
       </section>
 
       <section class="view" id="graph1">
-        <iframe src="interactive_graph_1.html" title="f(x) = 2x³ − 5x² + 4x − 7"></iframe>
+        <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;th&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot; /&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+  &lt;title&gt;Interactive Polynomial Graph&lt;/title&gt;
+  &lt;style&gt;
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: &quot;Segoe UI&quot;, Tahoma, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    .subtitle { margin: 0 0 20px; color: #64748b; }
+
+    .formula-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .formula,
+    .controls,
+    .card {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+
+    .formula { padding: 14px 16px; }
+    .formula strong { display: block; margin-bottom: 6px; color: #334155; }
+    .formula code { font-size: 16px; color: #0f172a; }
+
+    .controls {
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: 110px 1fr 100px;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    input[type=&quot;range&quot;] { width: 100%; }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .axis-control-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin: 10px 0 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .field input {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 14px;
+      color: #0f172a;
+      background: #f8fafc;
+    }
+
+    .toggles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    label.toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .stack {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .card { padding: 16px; }
+    .card h2 { margin: 0 0 8px; font-size: 20px; }
+
+    .card-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .hint {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin: 12px 0 0;
+    }
+
+    .info-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .info-box span {
+      display: block;
+      color: #64748b;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid #eef2f7;
+    }
+
+    .axis { stroke: #334155; stroke-width: 1.5; }
+    .grid-line { stroke: #e2e8f0; stroke-width: 1; }
+    .tick-label { font-size: 12px; fill: #64748b; }
+    .curve-f { fill: none; stroke: #2563eb; stroke-width: 3; }
+    .curve-d { fill: none; stroke: #dc2626; stroke-width: 3; }
+    .curve-i { fill: none; stroke: #16a34a; stroke-width: 3; }
+    .tangent { stroke: #f97316; stroke-width: 3; stroke-dasharray: 8 6; }
+    .area { fill: rgba(37, 99, 235, 0.18); stroke: none; }
+    .point { fill: #f97316; stroke: white; stroke-width: 2; }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #475569;
+    }
+
+    .legend span::before {
+      content: &quot;&quot;;
+      display: inline-block;
+      width: 18px;
+      height: 4px;
+      border-radius: 999px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .legend .blue::before { background: #2563eb; }
+    .legend .red::before { background: #dc2626; }
+    .legend .green::before { background: #16a34a; }
+    .legend .orange::before { background: #f97316; }
+    .legend .area-leg::before { background: rgba(37, 99, 235, 0.25); }
+
+    @media (max-width: 700px) {
+      .slider-row { grid-template-columns: 1fr; }
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;h1&gt;กราฟ Interactive ของ Polynomial กำลัง 3&lt;/h1&gt;
+    &lt;p class=&quot;subtitle&quot;&gt;กำหนดช่วงสไลเดอร์และช่วงแกนของแต่ละกราฟได้อิสระ&lt;/p&gt;
+
+    &lt;div class=&quot;formula-box&quot;&gt;
+      &lt;div class=&quot;formula&quot;&gt;&lt;strong&gt;ฟังก์ชัน&lt;/strong&gt;&lt;code&gt;f(x) = 2x³ − 5x² + 4x − 7&lt;/code&gt;&lt;/div&gt;
+      &lt;div class=&quot;formula&quot;&gt;&lt;strong&gt;อนุพันธ์&lt;/strong&gt;&lt;code&gt;f′(x) = 6x² − 10x + 4&lt;/code&gt;&lt;/div&gt;
+      &lt;div class=&quot;formula&quot;&gt;&lt;strong&gt;อินทิกรัลไม่จำกัดเขต&lt;/strong&gt;&lt;code&gt;∫f(x)dx = ½x⁴ − ⁵⁄₃x³ + 2x² − 7x + C&lt;/code&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;controls&quot;&gt;
+      &lt;div class=&quot;slider-row&quot;&gt;
+        &lt;strong&gt;เลือก x&lt;/strong&gt;
+        &lt;input id=&quot;xSlider&quot; type=&quot;range&quot; min=&quot;-0.5&quot; max=&quot;3&quot; step=&quot;0.01&quot; value=&quot;1.50&quot; /&gt;
+        &lt;strong id=&quot;xValue&quot;&gt;x = 1.50&lt;/strong&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;input-grid&quot;&gt;
+        &lt;label class=&quot;field&quot;&gt;x_min ของแถบเลื่อน&lt;input id=&quot;sliderMin&quot; type=&quot;number&quot; step=&quot;0.1&quot; value=&quot;-0.5&quot; /&gt;&lt;/label&gt;
+        &lt;label class=&quot;field&quot;&gt;x_max ของแถบเลื่อน&lt;input id=&quot;sliderMax&quot; type=&quot;number&quot; step=&quot;0.1&quot; value=&quot;3&quot; /&gt;&lt;/label&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;toggles&quot;&gt;
+        &lt;label class=&quot;toggle&quot;&gt;&lt;input id=&quot;showTangent&quot; type=&quot;checkbox&quot; checked /&gt; แสดงเส้นสัมผัส / ความชัน&lt;/label&gt;
+        &lt;label class=&quot;toggle&quot;&gt;&lt;input id=&quot;showArea&quot; type=&quot;checkbox&quot; checked /&gt; แสดงพื้นที่ใต้กราฟสะสมจาก 0 ถึง x&lt;/label&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;stack&quot;&gt;
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;div class=&quot;card-head&quot;&gt;
+          &lt;h2&gt;กราฟหลัก: f(x)&lt;/h2&gt;
+          &lt;span class=&quot;hint&quot;&gt;ปรับแกนของกราฟ f(x)&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;axis-control-grid&quot;&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน x จาก&lt;input id=&quot;mainXMin&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;-5&quot; /&gt;&lt;/label&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน x ถึง&lt;input id=&quot;mainXMax&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;5&quot; /&gt;&lt;/label&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน y จาก&lt;input id=&quot;mainYMin&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;-10&quot; /&gt;&lt;/label&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน y ถึง&lt;input id=&quot;mainYMax&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;5&quot; /&gt;&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;svg id=&quot;mainGraph&quot; viewBox=&quot;0 0 980 470&quot; aria-label=&quot;Graph of f(x)&quot;&gt;&lt;/svg&gt;
+        &lt;div class=&quot;legend&quot;&gt;&lt;span class=&quot;blue&quot;&gt;f(x)&lt;/span&gt;&lt;span class=&quot;orange&quot;&gt;เส้นสัมผัส&lt;/span&gt;&lt;span class=&quot;area-leg&quot;&gt;พื้นที่สะสม&lt;/span&gt;&lt;/div&gt;
+        &lt;div class=&quot;info&quot;&gt;
+          &lt;div class=&quot;info-box&quot;&gt;&lt;span&gt;ค่า x&lt;/span&gt;&lt;strong id=&quot;infoX&quot;&gt;1.50&lt;/strong&gt;&lt;/div&gt;
+          &lt;div class=&quot;info-box&quot;&gt;&lt;span&gt;ค่า f(x)&lt;/span&gt;&lt;strong id=&quot;infoF&quot;&gt;-&lt;/strong&gt;&lt;/div&gt;
+          &lt;div class=&quot;info-box&quot;&gt;&lt;span&gt;ความชัน f′(x)&lt;/span&gt;&lt;strong id=&quot;infoD&quot;&gt;-&lt;/strong&gt;&lt;/div&gt;
+          &lt;div class=&quot;info-box&quot;&gt;&lt;span&gt;พื้นที่สะสม ∫₀ˣf(t)dt&lt;/span&gt;&lt;strong id=&quot;infoA&quot;&gt;-&lt;/strong&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;div class=&quot;card-head&quot;&gt;
+          &lt;h2&gt;กราฟประกอบ: f′(x)&lt;/h2&gt;
+          &lt;span class=&quot;hint&quot;&gt;ปรับแกนของกราฟอนุพันธ์ได้อิสระ&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;axis-control-grid&quot;&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน x จาก&lt;input id=&quot;dXMin&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;-5&quot; /&gt;&lt;/label&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน x ถึง&lt;input id=&quot;dXMax&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;5&quot; /&gt;&lt;/label&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน y จาก&lt;input id=&quot;dYMin&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;-10&quot; /&gt;&lt;/label&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน y ถึง&lt;input id=&quot;dYMax&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;50&quot; /&gt;&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;svg id=&quot;derivativeGraph&quot; viewBox=&quot;0 0 980 420&quot; aria-label=&quot;Graph of f prime x&quot;&gt;&lt;/svg&gt;
+        &lt;div class=&quot;legend&quot;&gt;&lt;span class=&quot;red&quot;&gt;f′(x)&lt;/span&gt;&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;div class=&quot;card-head&quot;&gt;
+          &lt;h2&gt;กราฟประกอบ: ∫f(x)dx&lt;/h2&gt;
+          &lt;span class=&quot;hint&quot;&gt;ใช้ C = 0 และปรับแกนได้อิสระ&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;axis-control-grid&quot;&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน x จาก&lt;input id=&quot;iXMin&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;-5&quot; /&gt;&lt;/label&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน x ถึง&lt;input id=&quot;iXMax&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;5&quot; /&gt;&lt;/label&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน y จาก&lt;input id=&quot;iYMin&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;-30&quot; /&gt;&lt;/label&gt;
+          &lt;label class=&quot;field&quot;&gt;แกน y ถึง&lt;input id=&quot;iYMax&quot; type=&quot;number&quot; step=&quot;0.5&quot; value=&quot;30&quot; /&gt;&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;svg id=&quot;integralGraph&quot; viewBox=&quot;0 0 980 420&quot; aria-label=&quot;Graph of integral of f x&quot;&gt;&lt;/svg&gt;
+        &lt;div class=&quot;legend&quot;&gt;&lt;span class=&quot;green&quot;&gt;F(x), ให้ C = 0&lt;/span&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    const slider = document.getElementById(&quot;xSlider&quot;);
+    const showTangent = document.getElementById(&quot;showTangent&quot;);
+    const showArea = document.getElementById(&quot;showArea&quot;);
+    const numericInputs = document.querySelectorAll(&quot;input[type='number']&quot;);
+
+    function f(x) { return 2 * x ** 3 - 5 * x ** 2 + 4 * x - 7; }
+    function df(x) { return 6 * x ** 2 - 10 * x + 4; }
+    function F(x) { return 0.5 * x ** 4 - (5 / 3) * x ** 3 + 2 * x ** 2 - 7 * x; }
+    function accumulatedArea(x) { return F(x) - F(0); }
+
+    function num(id) { return Number(document.getElementById(id).value); }
+
+    function getRange(minId, maxId, fallbackMin, fallbackMax) {
+      let min = num(minId);
+      let max = num(maxId);
+      if (!Number.isFinite(min)) min = fallbackMin;
+      if (!Number.isFinite(max)) max = fallbackMax;
+      if (min === max) max = min + 1;
+      if (min &gt; max) [min, max] = [max, min];
+      return [min, max];
+    }
+
+    function niceStep(range) {
+      const raw = range / 6;
+      const pow = Math.pow(10, Math.floor(Math.log10(Math.max(raw, 0.0001))));
+      const n = raw / pow;
+      if (n &lt; 1.5) return 1 * pow;
+      if (n &lt; 3) return 2 * pow;
+      if (n &lt; 7) return 5 * pow;
+      return 10 * pow;
+    }
+
+    function makeScale(xMin, xMax, yMin, yMax, width, height, padding) {
+      const sx = x =&gt; padding.left + ((x - xMin) / (xMax - xMin)) * (width - padding.left - padding.right);
+      const sy = y =&gt; height - padding.bottom - ((y - yMin) / (yMax - yMin)) * (height - padding.top - padding.bottom);
+      return { sx, sy };
+    }
+
+    function samplePath(fn, xMin, xMax, n, scale) {
+      let d = &quot;&quot;;
+      for (let i = 0; i &lt;= n; i++) {
+        const x = xMin + (xMax - xMin) * i / n;
+        const y = fn(x);
+        d += `${i === 0 ? &quot;M&quot; : &quot;L&quot;} ${scale.sx(x)} ${scale.sy(y)} `;
+      }
+      return d;
+    }
+
+    function areaPath(fn, x0, x1, n, scale) {
+      let d = `M ${scale.sx(x0)} ${scale.sy(0)} `;
+      for (let i = 0; i &lt;= n; i++) {
+        const x = x0 + (x1 - x0) * i / n;
+        d += `L ${scale.sx(x)} ${scale.sy(fn(x))} `;
+      }
+      d += `L ${scale.sx(x1)} ${scale.sy(0)} Z`;
+      return d;
+    }
+
+    function drawAxes(svg, xMin, xMax, yMin, yMax, width, height, padding, scale) {
+      svg.innerHTML = &quot;&quot;;
+      const xStep = niceStep(xMax - xMin);
+      const yStep = niceStep(yMax - yMin);
+
+      const startX = Math.ceil(xMin / xStep) * xStep;
+      for (let x = startX; x &lt;= xMax + 1e-9; x += xStep) {
+        const X = scale.sx(x);
+        svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;line class=&quot;grid-line&quot; x1=&quot;${X}&quot; y1=&quot;${padding.top}&quot; x2=&quot;${X}&quot; y2=&quot;${height - padding.bottom}&quot; /&gt;`);
+        svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;text class=&quot;tick-label&quot; x=&quot;${X}&quot; y=&quot;${height - padding.bottom + 18}&quot; text-anchor=&quot;middle&quot;&gt;${Number(x.toFixed(3))}&lt;/text&gt;`);
+      }
+
+      const startY = Math.ceil(yMin / yStep) * yStep;
+      for (let y = startY; y &lt;= yMax + 1e-9; y += yStep) {
+        const Y = scale.sy(y);
+        svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;line class=&quot;grid-line&quot; x1=&quot;${padding.left}&quot; y1=&quot;${Y}&quot; x2=&quot;${width - padding.right}&quot; y2=&quot;${Y}&quot; /&gt;`);
+        svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;text class=&quot;tick-label&quot; x=&quot;${padding.left - 10}&quot; y=&quot;${Y + 4}&quot; text-anchor=&quot;end&quot;&gt;${Number(y.toFixed(3))}&lt;/text&gt;`);
+      }
+
+      if (yMin &lt;= 0 &amp;&amp; yMax &gt;= 0) {
+        const y0 = scale.sy(0);
+        svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;line class=&quot;axis&quot; x1=&quot;${padding.left}&quot; y1=&quot;${y0}&quot; x2=&quot;${width - padding.right}&quot; y2=&quot;${y0}&quot; /&gt;`);
+      }
+      if (xMin &lt;= 0 &amp;&amp; xMax &gt;= 0) {
+        const x0 = scale.sx(0);
+        svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;line class=&quot;axis&quot; x1=&quot;${x0}&quot; y1=&quot;${padding.top}&quot; x2=&quot;${x0}&quot; y2=&quot;${height - padding.bottom}&quot; /&gt;`);
+      }
+    }
+
+    function marker(svg, scale, x, y, padding, height, xMin, xMax, yMin, yMax) {
+      if (x &gt;= xMin &amp;&amp; x &lt;= xMax) {
+        svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;line stroke=&quot;#94a3b8&quot; stroke-width=&quot;1.5&quot; stroke-dasharray=&quot;5 5&quot; x1=&quot;${scale.sx(x)}&quot; y1=&quot;${padding.top}&quot; x2=&quot;${scale.sx(x)}&quot; y2=&quot;${height - padding.bottom}&quot; /&gt;`);
+      }
+      if (x &gt;= xMin &amp;&amp; x &lt;= xMax &amp;&amp; y &gt;= yMin &amp;&amp; y &lt;= yMax) {
+        svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;circle class=&quot;point&quot; cx=&quot;${scale.sx(x)}&quot; cy=&quot;${scale.sy(y)}&quot; r=&quot;6&quot; /&gt;`);
+      }
+    }
+
+    function updateSliderRange() {
+      const [min, max] = getRange(&quot;sliderMin&quot;, &quot;sliderMax&quot;, -0.5, 3);
+      slider.min = min;
+      slider.max = max;
+      let value = Number(slider.value);
+      if (value &lt; min) value = min;
+      if (value &gt; max) value = max;
+      slider.value = value;
+    }
+
+    function drawMainGraph(currentX) {
+      const svg = document.getElementById(&quot;mainGraph&quot;);
+      const width = 980, height = 470;
+      const padding = { top: 24, right: 28, bottom: 44, left: 62 };
+      const [xMin, xMax] = getRange(&quot;mainXMin&quot;, &quot;mainXMax&quot;, -5, 5);
+      const [yMin, yMax] = getRange(&quot;mainYMin&quot;, &quot;mainYMax&quot;, -10, 5);
+      const scale = makeScale(xMin, xMax, yMin, yMax, width, height, padding);
+
+      drawAxes(svg, xMin, xMax, yMin, yMax, width, height, padding, scale);
+
+      if (showArea.checked) {
+        const a = Math.min(0, currentX);
+        const b = Math.max(0, currentX);
+        if (b &gt;= xMin &amp;&amp; a &lt;= xMax) {
+          const aa = Math.max(a, xMin);
+          const bb = Math.min(b, xMax);
+          svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;path class=&quot;area&quot; d=&quot;${areaPath(f, aa, bb, 180, scale)}&quot; /&gt;`);
+        }
+      }
+
+      svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;path class=&quot;curve-f&quot; d=&quot;${samplePath(f, xMin, xMax, 500, scale)}&quot; /&gt;`);
+
+      const y = f(currentX);
+      const slope = df(currentX);
+      if (showTangent.checked &amp;&amp; currentX &gt;= xMin &amp;&amp; currentX &lt;= xMax) {
+        const span = (xMax - xMin) * 0.12;
+        const lineX1 = Math.max(xMin, currentX - span);
+        const lineX2 = Math.min(xMax, currentX + span);
+        const lineY1 = y + slope * (lineX1 - currentX);
+        const lineY2 = y + slope * (lineX2 - currentX);
+        svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;line class=&quot;tangent&quot; x1=&quot;${scale.sx(lineX1)}&quot; y1=&quot;${scale.sy(lineY1)}&quot; x2=&quot;${scale.sx(lineX2)}&quot; y2=&quot;${scale.sy(lineY2)}&quot; /&gt;`);
+      }
+
+      marker(svg, scale, currentX, y, padding, height, xMin, xMax, yMin, yMax);
+    }
+
+    function drawGraph(svgId, fn, className, xMinId, xMaxId, yMinId, yMaxId, fallback, currentX) {
+      const svg = document.getElementById(svgId);
+      const width = 980, height = 420;
+      const padding = { top: 24, right: 28, bottom: 44, left: 62 };
+      const [xMin, xMax] = getRange(xMinId, xMaxId, fallback.xMin, fallback.xMax);
+      const [yMin, yMax] = getRange(yMinId, yMaxId, fallback.yMin, fallback.yMax);
+      const scale = makeScale(xMin, xMax, yMin, yMax, width, height, padding);
+
+      drawAxes(svg, xMin, xMax, yMin, yMax, width, height, padding, scale);
+      svg.insertAdjacentHTML(&quot;beforeend&quot;, `&lt;path class=&quot;${className}&quot; d=&quot;${samplePath(fn, xMin, xMax, 500, scale)}&quot; /&gt;`);
+      marker(svg, scale, currentX, fn(currentX), padding, height, xMin, xMax, yMin, yMax);
+    }
+
+    function update() {
+      updateSliderRange();
+      const x = Number(slider.value);
+      const fx = f(x), dfx = df(x), area = accumulatedArea(x);
+
+      document.getElementById(&quot;xValue&quot;).textContent = `x = ${x.toFixed(2)}`;
+      document.getElementById(&quot;infoX&quot;).textContent = x.toFixed(2);
+      document.getElementById(&quot;infoF&quot;).textContent = fx.toFixed(3);
+      document.getElementById(&quot;infoD&quot;).textContent = dfx.toFixed(3);
+      document.getElementById(&quot;infoA&quot;).textContent = area.toFixed(3);
+
+      drawMainGraph(x);
+      drawGraph(&quot;derivativeGraph&quot;, df, &quot;curve-d&quot;, &quot;dXMin&quot;, &quot;dXMax&quot;, &quot;dYMin&quot;, &quot;dYMax&quot;, { xMin: -5, xMax: 5, yMin: -10, yMax: 50 }, x);
+      drawGraph(&quot;integralGraph&quot;, F, &quot;curve-i&quot;, &quot;iXMin&quot;, &quot;iXMax&quot;, &quot;iYMin&quot;, &quot;iYMax&quot;, { xMin: -5, xMax: 5, yMin: -30, yMax: 30 }, x);
+    }
+
+    slider.addEventListener(&quot;input&quot;, update);
+    showTangent.addEventListener(&quot;change&quot;, update);
+    showArea.addEventListener(&quot;change&quot;, update);
+    numericInputs.forEach(input =&gt; input.addEventListener(&quot;input&quot;, update));
+
+    update();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+" title="f(x) = 2x³ − 5x² + 4x − 7"></iframe>
       </section>
 
       <section class="view" id="graph2">
-        <iframe src="interactive_graph_2.html" title="f(x) = x³ − 3x² + 2x"></iframe>
+        <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;th&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot; /&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+  &lt;title&gt;Interactive Graph: f(x) = x³ − 3x² + 2x&lt;/title&gt;
+  &lt;style&gt;
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --border: #d8dee9;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --danger: #dc2626;
+      --green: #059669;
+      --purple: #7c3aed;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 24px 18px 12px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.35rem, 2vw, 2rem);
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    main {
+      width: min(1180px, 96vw);
+      margin: 0 auto 40px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 850px) {
+      .top-grid { grid-template-columns: 1fr; }
+    }
+
+    .formula-box {
+      background: linear-gradient(135deg, #eff6ff, #faf5ff);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+
+    .formula-box strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+
+    .formula {
+      font-size: 1.08rem;
+      font-weight: 650;
+      margin: 4px 0;
+    }
+
+    .control-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 10px;
+      align-items: end;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 700px) {
+      .control-row { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+    }
+
+    label {
+      display: grid;
+      gap: 5px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    input[type=&quot;number&quot;] {
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    input[type=&quot;range&quot;] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 9px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 15px rgba(15, 23, 42, 0.08);
+    }
+
+    button.active {
+      color: #fff;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 100px;
+      gap: 10px;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 650px) {
+      .slider-row { grid-template-columns: 1fr; }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .stat {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .stat .name {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .stat .value {
+      font-size: 1.15rem;
+      font-weight: 750;
+      margin-top: 3px;
+    }
+
+    .graph-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    .graph-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .graph-title {
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    .axis-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(90px, 1fr));
+      gap: 8px;
+      width: min(620px, 100%);
+    }
+
+    @media (max-width: 700px) {
+      .axis-grid { grid-template-columns: repeat(2, minmax(90px, 1fr)); }
+    }
+
+    canvas {
+      width: 100%;
+      height: 360px;
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .note {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-top: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .dot.red { background: var(--danger); }
+    .dot.green { background: var(--green); }
+    .dot.purple { background: var(--purple); }
+  &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Interactive Graph สำหรับสอนแคลคูลัส&lt;/h1&gt;
+    &lt;div class=&quot;subtitle&quot;&gt;ฟังก์ชันหลัก อนุพันธ์ ปริพันธ์ เส้นสัมผัส และพื้นที่สะสม&lt;/div&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;section class=&quot;panel top-grid&quot;&gt;
+      &lt;div&gt;
+        &lt;div class=&quot;formula-box&quot;&gt;
+          &lt;strong&gt;นิพจน์ที่ใช้&lt;/strong&gt;
+          &lt;div class=&quot;formula&quot;&gt;f(x) = x³ − 3x² + 2x&lt;/div&gt;
+          &lt;div class=&quot;formula&quot;&gt;f′(x) = 3x² − 6x + 2&lt;/div&gt;
+          &lt;div class=&quot;formula&quot;&gt;∫f(x)dx = x⁴/4 − x³ + x²  เมื่อ C = 0&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;control-row&quot;&gt;
+          &lt;label&gt;
+            x_min ของแถบเลื่อน
+            &lt;input id=&quot;sliderMin&quot; type=&quot;number&quot; value=&quot;-3&quot; step=&quot;0.1&quot; /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            x_max ของแถบเลื่อน
+            &lt;input id=&quot;sliderMax&quot; type=&quot;number&quot; value=&quot;5&quot; step=&quot;0.1&quot; /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            ค่า x ปัจจุบัน
+            &lt;input id=&quot;xNumber&quot; type=&quot;number&quot; value=&quot;1&quot; step=&quot;0.01&quot; /&gt;
+          &lt;/label&gt;
+          &lt;label&gt;
+            ความละเอียด step
+            &lt;input id=&quot;xStep&quot; type=&quot;number&quot; value=&quot;0.01&quot; step=&quot;0.01&quot; min=&quot;0.001&quot; /&gt;
+          &lt;/label&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;slider-row&quot;&gt;
+          &lt;span id=&quot;sliderMinLabel&quot;&gt;-3&lt;/span&gt;
+          &lt;input id=&quot;xSlider&quot; type=&quot;range&quot; min=&quot;-3&quot; max=&quot;5&quot; value=&quot;1&quot; step=&quot;0.01&quot; /&gt;
+          &lt;span id=&quot;sliderMaxLabel&quot;&gt;5&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;div style=&quot;display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;&quot;&gt;
+          &lt;button id=&quot;toggleTangent&quot; class=&quot;active&quot;&gt;แสดงเส้นสัมผัส / ความชัน&lt;/button&gt;
+          &lt;button id=&quot;toggleArea&quot; class=&quot;active&quot;&gt;แสดงพื้นที่สะสม&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;stats&quot;&gt;
+          &lt;div class=&quot;stat&quot;&gt;
+            &lt;div class=&quot;name&quot;&gt;x&lt;/div&gt;
+            &lt;div id=&quot;xValue&quot; class=&quot;value&quot;&gt;-&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;stat&quot;&gt;
+            &lt;div class=&quot;name&quot;&gt;f(x)&lt;/div&gt;
+            &lt;div id=&quot;fxValue&quot; class=&quot;value&quot;&gt;-&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;stat&quot;&gt;
+            &lt;div class=&quot;name&quot;&gt;f′(x)&lt;/div&gt;
+            &lt;div id=&quot;dfxValue&quot; class=&quot;value&quot;&gt;-&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;stat&quot;&gt;
+            &lt;div class=&quot;name&quot;&gt;∫₀ˣ f(t)dt&lt;/div&gt;
+            &lt;div id=&quot;areaValue&quot; class=&quot;value&quot;&gt;-&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;p class=&quot;note&quot;&gt;
+          ปรับค่า x ด้วยแถบเลื่อน แล้วสังเกตจุดบนกราฟทั้ง 3 แถว เส้นสัมผัส และพื้นที่ใต้กราฟสะสม
+        &lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;section class=&quot;graph-card&quot;&gt;
+      &lt;div class=&quot;graph-header&quot;&gt;
+        &lt;div class=&quot;graph-title&quot;&gt;แถวที่ 1: f(x)&lt;/div&gt;
+        &lt;div class=&quot;axis-grid&quot;&gt;
+          &lt;label&gt;x_min &lt;input id=&quot;mainXMin&quot; type=&quot;number&quot; value=&quot;-3&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+          &lt;label&gt;x_max &lt;input id=&quot;mainXMax&quot; type=&quot;number&quot; value=&quot;5&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+          &lt;label&gt;y_min &lt;input id=&quot;mainYMin&quot; type=&quot;number&quot; value=&quot;-5&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+          &lt;label&gt;y_max &lt;input id=&quot;mainYMax&quot; type=&quot;number&quot; value=&quot;10&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;canvas id=&quot;mainCanvas&quot;&gt;&lt;/canvas&gt;
+      &lt;div class=&quot;legend&quot;&gt;
+        &lt;span class=&quot;chip&quot;&gt;&lt;span class=&quot;dot&quot;&gt;&lt;/span&gt;กราฟ f(x)&lt;/span&gt;
+        &lt;span class=&quot;chip&quot;&gt;&lt;span class=&quot;dot red&quot;&gt;&lt;/span&gt;จุดที่เลือก&lt;/span&gt;
+        &lt;span class=&quot;chip&quot;&gt;&lt;span class=&quot;dot green&quot;&gt;&lt;/span&gt;เส้นสัมผัส&lt;/span&gt;
+        &lt;span class=&quot;chip&quot;&gt;&lt;span class=&quot;dot purple&quot;&gt;&lt;/span&gt;พื้นที่สะสมจาก 0 ถึง x&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;section class=&quot;graph-card&quot;&gt;
+      &lt;div class=&quot;graph-header&quot;&gt;
+        &lt;div class=&quot;graph-title&quot;&gt;แถวที่ 2: f′(x)&lt;/div&gt;
+        &lt;div class=&quot;axis-grid&quot;&gt;
+          &lt;label&gt;x_min &lt;input id=&quot;derivXMin&quot; type=&quot;number&quot; value=&quot;-3&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+          &lt;label&gt;x_max &lt;input id=&quot;derivXMax&quot; type=&quot;number&quot; value=&quot;5&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+          &lt;label&gt;y_min &lt;input id=&quot;derivYMin&quot; type=&quot;number&quot; value=&quot;-3&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+          &lt;label&gt;y_max &lt;input id=&quot;derivYMax&quot; type=&quot;number&quot; value=&quot;35&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;canvas id=&quot;derivCanvas&quot;&gt;&lt;/canvas&gt;
+      &lt;div class=&quot;legend&quot;&gt;
+        &lt;span class=&quot;chip&quot;&gt;&lt;span class=&quot;dot&quot;&gt;&lt;/span&gt;กราฟ f′(x)&lt;/span&gt;
+        &lt;span class=&quot;chip&quot;&gt;&lt;span class=&quot;dot red&quot;&gt;&lt;/span&gt;จุดความชันที่เลือก&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;section class=&quot;graph-card&quot;&gt;
+      &lt;div class=&quot;graph-header&quot;&gt;
+        &lt;div class=&quot;graph-title&quot;&gt;แถวที่ 3: ∫f(x)dx เมื่อ C = 0&lt;/div&gt;
+        &lt;div class=&quot;axis-grid&quot;&gt;
+          &lt;label&gt;x_min &lt;input id=&quot;intXMin&quot; type=&quot;number&quot; value=&quot;-3&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+          &lt;label&gt;x_max &lt;input id=&quot;intXMax&quot; type=&quot;number&quot; value=&quot;5&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+          &lt;label&gt;y_min &lt;input id=&quot;intYMin&quot; type=&quot;number&quot; value=&quot;-5&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+          &lt;label&gt;y_max &lt;input id=&quot;intYMax&quot; type=&quot;number&quot; value=&quot;40&quot; step=&quot;0.5&quot;&gt;&lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;canvas id=&quot;intCanvas&quot;&gt;&lt;/canvas&gt;
+      &lt;div class=&quot;legend&quot;&gt;
+        &lt;span class=&quot;chip&quot;&gt;&lt;span class=&quot;dot&quot;&gt;&lt;/span&gt;กราฟ ∫f(x)dx&lt;/span&gt;
+        &lt;span class=&quot;chip&quot;&gt;&lt;span class=&quot;dot red&quot;&gt;&lt;/span&gt;จุดที่เลือก&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;script&gt;
+    /****************************************************************
+     * จุดสำคัญสำหรับแก้นิพจน์อื่น
+     * 1) แก้ f(x)
+     * 2) แก้ df(x) = อนุพันธ์ของ f(x)
+     * 3) แก้ F(x) = ปริพันธ์ไม่จำกัดของ f(x) โดยให้ C = 0
+     * 4) areaFromZero(x) = F(x) - F(0)
+     ****************************************************************/
+
+    function f(x) {
+      return x ** 3 - 3 * x ** 2 + 2 * x;
+    }
+
+    function df(x) {
+      return 3 * x ** 2 - 6 * x + 2;
+    }
+
+    function F(x) {
+      return (x ** 4) / 4 - x ** 3 + x ** 2;
+    }
+
+    function areaFromZero(x) {
+      return F(x) - F(0);
+    }
+
+    const state = {
+      x: 1,
+      showTangent: true,
+      showArea: true
+    };
+
+    const $ = (id) =&gt; document.getElementById(id);
+
+    const mainCanvas = $(&quot;mainCanvas&quot;);
+    const derivCanvas = $(&quot;derivCanvas&quot;);
+    const intCanvas = $(&quot;intCanvas&quot;);
+
+    const xSlider = $(&quot;xSlider&quot;);
+    const xNumber = $(&quot;xNumber&quot;);
+    const sliderMin = $(&quot;sliderMin&quot;);
+    const sliderMax = $(&quot;sliderMax&quot;);
+    const xStep = $(&quot;xStep&quot;);
+
+    function formatNumber(n) {
+      if (!Number.isFinite(n)) return &quot;-&quot;;
+      return Math.abs(n) &lt; 1e-10 ? &quot;0&quot; : Number(n.toFixed(4)).toString();
+    }
+
+    function getAxis(prefix) {
+      const xMin = Number($(prefix + &quot;XMin&quot;).value);
+      const xMax = Number($(prefix + &quot;XMax&quot;).value);
+      const yMin = Number($(prefix + &quot;YMin&quot;).value);
+      const yMax = Number($(prefix + &quot;YMax&quot;).value);
+
+      if (xMax &lt;= xMin || yMax &lt;= yMin) {
+        return null;
+      }
+      return { xMin, xMax, yMin, yMax };
+    }
+
+    function resizeCanvas(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      const ctx = canvas.getContext(&quot;2d&quot;);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { ctx, width: rect.width, height: rect.height };
+    }
+
+    function createMapper(axis, width, height, pad) {
+      return {
+        sx: (x) =&gt; pad.left + ((x - axis.xMin) / (axis.xMax - axis.xMin)) * (width - pad.left - pad.right),
+        sy: (y) =&gt; height - pad.bottom - ((y - axis.yMin) / (axis.yMax - axis.yMin)) * (height - pad.top - pad.bottom),
+        xFromScreen: (sx) =&gt; axis.xMin + ((sx - pad.left) / (width - pad.left - pad.right)) * (axis.xMax - axis.xMin)
+      };
+    }
+
+    function drawGrid(ctx, axis, map, width, height, pad, title) {
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.fillStyle = &quot;#ffffff&quot;;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.strokeStyle = &quot;#edf2f7&quot;;
+      ctx.lineWidth = 1;
+      ctx.fillStyle = &quot;#6b7280&quot;;
+      ctx.font = &quot;12px system-ui&quot;;
+
+      const xTicks = 10;
+      const yTicks = 8;
+
+      for (let i = 0; i &lt;= xTicks; i++) {
+        const x = axis.xMin + (i / xTicks) * (axis.xMax - axis.xMin);
+        const sx = map.sx(x);
+        ctx.beginPath();
+        ctx.moveTo(sx, pad.top);
+        ctx.lineTo(sx, height - pad.bottom);
+        ctx.stroke();
+        ctx.fillText(formatNumber(x), sx - 12, height - pad.bottom + 18);
+      }
+
+      for (let i = 0; i &lt;= yTicks; i++) {
+        const y = axis.yMin + (i / yTicks) * (axis.yMax - axis.yMin);
+        const sy = map.sy(y);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, sy);
+        ctx.lineTo(width - pad.right, sy);
+        ctx.stroke();
+        ctx.fillText(formatNumber(y), 8, sy + 4);
+      }
+
+      // แกน x และ y
+      ctx.strokeStyle = &quot;#9ca3af&quot;;
+      ctx.lineWidth = 1.5;
+
+      if (axis.yMin &lt;= 0 &amp;&amp; axis.yMax &gt;= 0) {
+        const sy0 = map.sy(0);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, sy0);
+        ctx.lineTo(width - pad.right, sy0);
+        ctx.stroke();
+      }
+
+      if (axis.xMin &lt;= 0 &amp;&amp; axis.xMax &gt;= 0) {
+        const sx0 = map.sx(0);
+        ctx.beginPath();
+        ctx.moveTo(sx0, pad.top);
+        ctx.lineTo(sx0, height - pad.bottom);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = &quot;#1f2937&quot;;
+      ctx.font = &quot;bold 14px system-ui&quot;;
+      ctx.fillText(title, pad.left, 24);
+    }
+
+    function drawCurve(ctx, axis, map, width, height, pad, fn, color = &quot;#2563eb&quot;) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(pad.left, pad.top, width - pad.left - pad.right, height - pad.top - pad.bottom);
+      ctx.clip();
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+
+      const samples = 700;
+      let started = false;
+
+      for (let i = 0; i &lt;= samples; i++) {
+        const x = axis.xMin + (i / samples) * (axis.xMax - axis.xMin);
+        const y = fn(x);
+        const sx = map.sx(x);
+        const sy = map.sy(y);
+
+        if (!Number.isFinite(y)) {
+          started = false;
+          continue;
+        }
+
+        if (!started) {
+          ctx.moveTo(sx, sy);
+          started = true;
+        } else {
+          ctx.lineTo(sx, sy);
+        }
+      }
+
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawSelectedPoint(ctx, map, x, y, label) {
+      const sx = map.sx(x);
+      const sy = map.sy(y);
+
+      ctx.save();
+      ctx.setLineDash([6, 5]);
+      ctx.strokeStyle = &quot;#dc2626&quot;;
+      ctx.lineWidth = 1.4;
+
+      ctx.beginPath();
+      ctx.moveTo(sx, 0);
+      ctx.lineTo(sx, ctx.canvas.height);
+      ctx.stroke();
+
+      ctx.setLineDash([]);
+      ctx.fillStyle = &quot;#dc2626&quot;;
+      ctx.beginPath();
+      ctx.arc(sx, sy, 5.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = &quot;#111827&quot;;
+      ctx.font = &quot;bold 12px system-ui&quot;;
+      ctx.fillText(label, sx + 8, sy - 8);
+      ctx.restore();
+    }
+
+    function drawTangent(ctx, axis, map, width, height, pad, x0) {
+      const y0 = f(x0);
+      const m = df(x0);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(pad.left, pad.top, width - pad.left - pad.right, height - pad.top - pad.bottom);
+      ctx.clip();
+
+      const x1 = axis.xMin;
+      const x2 = axis.xMax;
+      const y1 = y0 + m * (x1 - x0);
+      const y2 = y0 + m * (x2 - x0);
+
+      ctx.strokeStyle = &quot;#059669&quot;;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([10, 6]);
+      ctx.beginPath();
+      ctx.moveTo(map.sx(x1), map.sy(y1));
+      ctx.lineTo(map.sx(x2), map.sy(y2));
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function drawAccumulatedArea(ctx, axis, map, width, height, pad, xSelected) {
+      if (!state.showArea) return;
+
+      const start = 0;
+      const end = xSelected;
+      const low = Math.min(start, end);
+      const high = Math.max(start, end);
+
+      if (high &lt; axis.xMin || low &gt; axis.xMax) return;
+
+      const a = Math.max(low, axis.xMin);
+      const b = Math.min(high, axis.xMax);
+      const samples = 260;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(pad.left, pad.top, width - pad.left - pad.right, height - pad.top - pad.bottom);
+      ctx.clip();
+
+      ctx.fillStyle = &quot;rgba(124, 58, 237, 0.22)&quot;;
+      ctx.beginPath();
+      ctx.moveTo(map.sx(a), map.sy(0));
+
+      for (let i = 0; i &lt;= samples; i++) {
+        const x = a + (i / samples) * (b - a);
+        ctx.lineTo(map.sx(x), map.sy(f(x)));
+      }
+
+      ctx.lineTo(map.sx(b), map.sy(0));
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawGraph(canvas, axis, fn, title, pointY, options = {}) {
+      const { ctx, width, height } = resizeCanvas(canvas);
+      const pad = { left: 54, right: 22, top: 42, bottom: 42 };
+      const map = createMapper(axis, width, height, pad);
+
+      drawGrid(ctx, axis, map, width, height, pad, title);
+
+      if (options.area) {
+        drawAccumulatedArea(ctx, axis, map, width, height, pad, state.x);
+      }
+
+      drawCurve(ctx, axis, map, width, height, pad, fn, &quot;#2563eb&quot;);
+
+      if (options.tangent &amp;&amp; state.showTangent) {
+        drawTangent(ctx, axis, map, width, height, pad, state.x);
+      }
+
+      drawSelectedPoint(ctx, map, state.x, pointY, `x=${formatNumber(state.x)}`);
+    }
+
+    function updateSliderSettings() {
+      let min = Number(sliderMin.value);
+      let max = Number(sliderMax.value);
+      let step = Number(xStep.value);
+
+      if (!Number.isFinite(step) || step &lt;= 0) step = 0.01;
+      if (!Number.isFinite(min)) min = -3;
+      if (!Number.isFinite(max)) max = 5;
+      if (max &lt;= min) max = min + 1;
+
+      xSlider.min = min;
+      xSlider.max = max;
+      xSlider.step = step;
+      $(&quot;sliderMinLabel&quot;).textContent = formatNumber(min);
+      $(&quot;sliderMaxLabel&quot;).textContent = formatNumber(max);
+
+      state.x = Math.min(Math.max(state.x, min), max);
+      xSlider.value = state.x;
+      xNumber.value = state.x;
+    }
+
+    function updateValues() {
+      $(&quot;xValue&quot;).textContent = formatNumber(state.x);
+      $(&quot;fxValue&quot;).textContent = formatNumber(f(state.x));
+      $(&quot;dfxValue&quot;).textContent = formatNumber(df(state.x));
+      $(&quot;areaValue&quot;).textContent = formatNumber(areaFromZero(state.x));
+    }
+
+    function renderAll() {
+      updateSliderSettings();
+      updateValues();
+
+      const mainAxis = getAxis(&quot;main&quot;);
+      const derivAxis = getAxis(&quot;deriv&quot;);
+      const intAxis = getAxis(&quot;int&quot;);
+
+      if (mainAxis) {
+        drawGraph(mainCanvas, mainAxis, f, &quot;f(x) = x³ − 3x² + 2x&quot;, f(state.x), {
+          tangent: true,
+          area: true
+        });
+      }
+
+      if (derivAxis) {
+        drawGraph(derivCanvas, derivAxis, df, &quot;f′(x) = 3x² − 6x + 2&quot;, df(state.x));
+      }
+
+      if (intAxis) {
+        drawGraph(intCanvas, intAxis, F, &quot;∫f(x)dx = x⁴/4 − x³ + x²&quot;, F(state.x));
+      }
+    }
+
+    xSlider.addEventListener(&quot;input&quot;, () =&gt; {
+      state.x = Number(xSlider.value);
+      xNumber.value = state.x;
+      renderAll();
+    });
+
+    xNumber.addEventListener(&quot;input&quot;, () =&gt; {
+      state.x = Number(xNumber.value);
+      renderAll();
+    });
+
+    [sliderMin, sliderMax, xStep].forEach(input =&gt; {
+      input.addEventListener(&quot;input&quot;, renderAll);
+    });
+
+    [
+      &quot;mainXMin&quot;, &quot;mainXMax&quot;, &quot;mainYMin&quot;, &quot;mainYMax&quot;,
+      &quot;derivXMin&quot;, &quot;derivXMax&quot;, &quot;derivYMin&quot;, &quot;derivYMax&quot;,
+      &quot;intXMin&quot;, &quot;intXMax&quot;, &quot;intYMin&quot;, &quot;intYMax&quot;
+    ].forEach(id =&gt; $(id).addEventListener(&quot;input&quot;, renderAll));
+
+    $(&quot;toggleTangent&quot;).addEventListener(&quot;click&quot;, () =&gt; {
+      state.showTangent = !state.showTangent;
+      $(&quot;toggleTangent&quot;).classList.toggle(&quot;active&quot;, state.showTangent);
+      renderAll();
+    });
+
+    $(&quot;toggleArea&quot;).addEventListener(&quot;click&quot;, () =&gt; {
+      state.showArea = !state.showArea;
+      $(&quot;toggleArea&quot;).classList.toggle(&quot;active&quot;, state.showArea);
+      renderAll();
+    });
+
+    window.addEventListener(&quot;resize&quot;, renderAll);
+
+    renderAll();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+" title="f(x) = x³ − 3x² + 2x"></iframe>
       </section>
 
       <section class="view" id="graph3">
-        <iframe src="interactive_graph_3.html" title="f(x) = x² + 5x + 6"></iframe>
+        <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;th&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot; /&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+  &lt;title&gt;Interactive Graph: f(x) = x² + 5x + 6&lt;/title&gt;
+  &lt;style&gt;
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --line: #d8dee9;
+      --text: #1f2937;
+      --muted: #64748b;
+      --accent: #2563eb;
+      --accent-2: #7c3aed;
+      --success: #059669;
+      --danger: #dc2626;
+      --grid: #e5e7eb;
+      --axis: #64748b;
+      --area: rgba(16, 185, 129, 0.20);
+      --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.45rem, 3vw, 2.15rem);
+    }
+
+    .subtitle {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+
+    .panel,
+    .graph-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    input[type=&quot;number&quot;] {
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font: inherit;
+      background: #fff;
+    }
+
+    input[type=&quot;range&quot;] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .slider-row {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .x-badge {
+      min-width: 94px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .toggle.on {
+      background: #dcfce7;
+      color: #047857;
+    }
+
+    .toggle.off {
+      background: #e5e7eb;
+      color: #475569;
+    }
+
+    .reset {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .stat {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fbfdff;
+    }
+
+    .stat-name {
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-bottom: 3px;
+    }
+
+    .stat-value {
+      font-size: 1.05rem;
+      font-weight: 800;
+      word-break: break-word;
+    }
+
+    .graphs {
+      display: grid;
+      gap: 16px;
+    }
+
+    .graph-card {
+      padding: 14px;
+    }
+
+    .graph-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .graph-title {
+      font-weight: 900;
+      font-size: 1.08rem;
+    }
+
+    .graph-note {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .canvas-wrap {
+      width: 100%;
+      height: 340px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .axis-controls {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(110px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .small {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    @media (max-width: 650px) {
+      .page { padding: 12px; }
+      .axis-controls { grid-template-columns: repeat(2, minmax(110px, 1fr)); }
+      .canvas-wrap { height: 290px; }
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;main class=&quot;page&quot;&gt;
+    &lt;h1&gt;Interactive Graph: f(x) = x² + 5x + 6&lt;/h1&gt;
+    &lt;p class=&quot;subtitle&quot;&gt;เลื่อนค่า x เพื่อดูค่าฟังก์ชัน อนุพันธ์ เส้นสัมผัส และพื้นที่ใต้กราฟสะสมพร้อมกัน&lt;/p&gt;
+
+    &lt;section class=&quot;panel&quot;&gt;
+      &lt;div class=&quot;control-grid&quot;&gt;
+        &lt;div&gt;
+          &lt;label for=&quot;sliderMin&quot;&gt;ค่าต่ำสุดของแถบเลื่อน x&lt;/label&gt;
+          &lt;input id=&quot;sliderMin&quot; type=&quot;number&quot; value=&quot;-10&quot; step=&quot;0.5&quot; /&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;label for=&quot;sliderMax&quot;&gt;ค่าสูงสุดของแถบเลื่อน x&lt;/label&gt;
+          &lt;input id=&quot;sliderMax&quot; type=&quot;number&quot; value=&quot;10&quot; step=&quot;0.5&quot; /&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;label for=&quot;sliderStep&quot;&gt;ความละเอียดของแถบเลื่อน&lt;/label&gt;
+          &lt;input id=&quot;sliderStep&quot; type=&quot;number&quot; value=&quot;0.1&quot; step=&quot;0.01&quot; min=&quot;0.001&quot; /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;slider-row&quot;&gt;
+        &lt;input id=&quot;xSlider&quot; type=&quot;range&quot; min=&quot;-10&quot; max=&quot;10&quot; step=&quot;0.1&quot; value=&quot;0&quot; /&gt;
+        &lt;div class=&quot;x-badge&quot;&gt;x = &lt;span id=&quot;xBadge&quot;&gt;0&lt;/span&gt;&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;button-row&quot;&gt;
+        &lt;button id=&quot;toggleTangent&quot; class=&quot;toggle on&quot; type=&quot;button&quot;&gt;เส้นสัมผัส / ความชัน: เปิด&lt;/button&gt;
+        &lt;button id=&quot;toggleArea&quot; class=&quot;toggle on&quot; type=&quot;button&quot;&gt;พื้นที่สะสม: เปิด&lt;/button&gt;
+        &lt;button id=&quot;resetView&quot; class=&quot;reset&quot; type=&quot;button&quot;&gt;คืนค่าช่วงแกนเริ่มต้น&lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;stats&quot;&gt;
+        &lt;div class=&quot;stat&quot;&gt;
+          &lt;div class=&quot;stat-name&quot;&gt;ค่าปัจจุบันของ x&lt;/div&gt;
+          &lt;div class=&quot;stat-value&quot; id=&quot;statX&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;stat&quot;&gt;
+          &lt;div class=&quot;stat-name&quot;&gt;f(x)&lt;/div&gt;
+          &lt;div class=&quot;stat-value&quot; id=&quot;statFx&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;stat&quot;&gt;
+          &lt;div class=&quot;stat-name&quot;&gt;f′(x)&lt;/div&gt;
+          &lt;div class=&quot;stat-value&quot; id=&quot;statDfx&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;stat&quot;&gt;
+          &lt;div class=&quot;stat-name&quot;&gt;∫₀ˣ f(t)dt&lt;/div&gt;
+          &lt;div class=&quot;stat-value&quot; id=&quot;statArea&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;section class=&quot;graphs&quot;&gt;
+      &lt;article class=&quot;graph-card&quot;&gt;
+        &lt;div class=&quot;graph-header&quot;&gt;
+          &lt;div class=&quot;graph-title&quot;&gt;แถวที่ 1: f(x) = x² + 5x + 6&lt;/div&gt;
+          &lt;div class=&quot;graph-note&quot;&gt;แสดงจุดที่เลือก เส้นสัมผัส และพื้นที่สะสมจาก x = 0&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;canvas-wrap&quot;&gt;&lt;canvas id=&quot;canvasF&quot;&gt;&lt;/canvas&gt;&lt;/div&gt;
+        &lt;div class=&quot;axis-controls&quot; data-prefix=&quot;f&quot;&gt;
+          &lt;div&gt;&lt;label&gt;x_min&lt;/label&gt;&lt;input id=&quot;fXMin&quot; type=&quot;number&quot; value=&quot;-10&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;x_max&lt;/label&gt;&lt;input id=&quot;fXMax&quot; type=&quot;number&quot; value=&quot;10&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_min&lt;/label&gt;&lt;input id=&quot;fYMin&quot; type=&quot;number&quot; value=&quot;-10&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_max&lt;/label&gt;&lt;input id=&quot;fYMax&quot; type=&quot;number&quot; value=&quot;60&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+
+      &lt;article class=&quot;graph-card&quot;&gt;
+        &lt;div class=&quot;graph-header&quot;&gt;
+          &lt;div class=&quot;graph-title&quot;&gt;แถวที่ 2: f′(x) = 2x + 5&lt;/div&gt;
+          &lt;div class=&quot;graph-note&quot;&gt;ค่าบนกราฟนี้คือความชันของ f(x)&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;canvas-wrap&quot;&gt;&lt;canvas id=&quot;canvasD&quot;&gt;&lt;/canvas&gt;&lt;/div&gt;
+        &lt;div class=&quot;axis-controls&quot; data-prefix=&quot;d&quot;&gt;
+          &lt;div&gt;&lt;label&gt;x_min&lt;/label&gt;&lt;input id=&quot;dXMin&quot; type=&quot;number&quot; value=&quot;-10&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;x_max&lt;/label&gt;&lt;input id=&quot;dXMax&quot; type=&quot;number&quot; value=&quot;10&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_min&lt;/label&gt;&lt;input id=&quot;dYMin&quot; type=&quot;number&quot; value=&quot;-20&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_max&lt;/label&gt;&lt;input id=&quot;dYMax&quot; type=&quot;number&quot; value=&quot;30&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+
+      &lt;article class=&quot;graph-card&quot;&gt;
+        &lt;div class=&quot;graph-header&quot;&gt;
+          &lt;div class=&quot;graph-title&quot;&gt;แถวที่ 3: ∫f(x)dx = x³/3 + 5x²/2 + 6x, เมื่อ C = 0&lt;/div&gt;
+          &lt;div class=&quot;graph-note&quot;&gt;กราฟปริพันธ์ไม่จำกัดเขียนโดยกำหนดค่าคงที่ C = 0&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;canvas-wrap&quot;&gt;&lt;canvas id=&quot;canvasI&quot;&gt;&lt;/canvas&gt;&lt;/div&gt;
+        &lt;div class=&quot;axis-controls&quot; data-prefix=&quot;i&quot;&gt;
+          &lt;div&gt;&lt;label&gt;x_min&lt;/label&gt;&lt;input id=&quot;iXMin&quot; type=&quot;number&quot; value=&quot;-10&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;x_max&lt;/label&gt;&lt;input id=&quot;iXMax&quot; type=&quot;number&quot; value=&quot;10&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_min&lt;/label&gt;&lt;input id=&quot;iYMin&quot; type=&quot;number&quot; value=&quot;-120&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_max&lt;/label&gt;&lt;input id=&quot;iYMax&quot; type=&quot;number&quot; value=&quot;650&quot; step=&quot;0.5&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+    &lt;/section&gt;
+
+    &lt;p class=&quot;small&quot;&gt;
+      หมายเหตุ: พื้นที่สะสมใช้ค่าอินทิกรัลแบบมีเครื่องหมาย (signed integral) จาก 0 ถึง x
+    &lt;/p&gt;
+  &lt;/main&gt;
+
+  &lt;script&gt;
+    &quot;use strict&quot;;
+
+    /*
+      ==========================================================
+      จุดสำคัญสำหรับแก้ไขนิพจน์ในอนาคต
+      แก้ฟังก์ชัน 3 บรรทัดนี้ให้ตรงกับนิพจน์ใหม่:
+      1) f(x)       ฟังก์ชันหลัก
+      2) df(x)      อนุพันธ์ของ f(x)
+      3) integral(x) ปริพันธ์ของ f(x) โดยกำหนด C = 0
+      ==========================================================
+    */
+    const f = (x) =&gt; x * x + 5 * x + 6;
+    const df = (x) =&gt; 2 * x + 5;
+    const integral = (x) =&gt; (x * x * x) / 3 + (5 * x * x) / 2 + 6 * x;
+
+    // ปริพันธ์สะสมจาก 0 ถึง x: F(x) - F(0)
+    const accumulatedArea = (x) =&gt; integral(x) - integral(0);
+
+    const $ = (id) =&gt; document.getElementById(id);
+
+    const state = {
+      x: 0,
+      showTangent: true,
+      showArea: true
+    };
+
+    const graphConfigs = {
+      f: {
+        canvas: $(&quot;canvasF&quot;),
+        func: f,
+        xMin: $(&quot;fXMin&quot;), xMax: $(&quot;fXMax&quot;),
+        yMin: $(&quot;fYMin&quot;), yMax: $(&quot;fYMax&quot;),
+        color: &quot;#2563eb&quot;,
+        pointColor: &quot;#dc2626&quot;
+      },
+      d: {
+        canvas: $(&quot;canvasD&quot;),
+        func: df,
+        xMin: $(&quot;dXMin&quot;), xMax: $(&quot;dXMax&quot;),
+        yMin: $(&quot;dYMin&quot;), yMax: $(&quot;dYMax&quot;),
+        color: &quot;#7c3aed&quot;,
+        pointColor: &quot;#dc2626&quot;
+      },
+      i: {
+        canvas: $(&quot;canvasI&quot;),
+        func: integral,
+        xMin: $(&quot;iXMin&quot;), xMax: $(&quot;iXMax&quot;),
+        yMin: $(&quot;iYMin&quot;), yMax: $(&quot;iYMax&quot;),
+        color: &quot;#059669&quot;,
+        pointColor: &quot;#dc2626&quot;
+      }
+    };
+
+    function readNumber(input, fallback) {
+      const value = Number(input.value);
+      return Number.isFinite(value) ? value : fallback;
+    }
+
+    function formatNumber(value) {
+      if (!Number.isFinite(value)) return &quot;ไม่สามารถคำนวณได้&quot;;
+      const rounded = Math.abs(value) &lt; 1e-10 ? 0 : value;
+      return Number(rounded.toFixed(4)).toLocaleString(&quot;th-TH&quot;, {
+        maximumFractionDigits: 4
+      });
+    }
+
+    function getBounds(config) {
+      let xMin = readNumber(config.xMin, -10);
+      let xMax = readNumber(config.xMax, 10);
+      let yMin = readNumber(config.yMin, -10);
+      let yMax = readNumber(config.yMax, 10);
+
+      // ป้องกันช่วงแกนผิดพลาด เช่น min มากกว่า max หรือมีค่าเท่ากัน
+      if (xMax &lt;= xMin) xMax = xMin + 1;
+      if (yMax &lt;= yMin) yMax = yMin + 1;
+
+      return { xMin, xMax, yMin, yMax };
+    }
+
+    function resizeCanvas(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      const width = Math.max(1, Math.round(rect.width * ratio));
+      const height = Math.max(1, Math.round(rect.height * ratio));
+
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+      }
+
+      const ctx = canvas.getContext(&quot;2d&quot;);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return { ctx, width: rect.width, height: rect.height };
+    }
+
+    function niceStep(range, targetLines = 8) {
+      const rough = Math.abs(range) / targetLines;
+      const power = Math.pow(10, Math.floor(Math.log10(rough || 1)));
+      const fraction = rough / power;
+      let niceFraction = 1;
+      if (fraction &gt;= 5) niceFraction = 5;
+      else if (fraction &gt;= 2) niceFraction = 2;
+      return niceFraction * power;
+    }
+
+    function drawGraph(config, options = {}) {
+      const { ctx, width, height } = resizeCanvas(config.canvas);
+      const { xMin, xMax, yMin, yMax } = getBounds(config);
+
+      const margin = { left: 58, right: 18, top: 20, bottom: 36 };
+      const plotW = width - margin.left - margin.right;
+      const plotH = height - margin.top - margin.bottom;
+
+      const xToPx = (x) =&gt; margin.left + ((x - xMin) / (xMax - xMin)) * plotW;
+      const yToPx = (y) =&gt; margin.top + ((yMax - y) / (yMax - yMin)) * plotH;
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(margin.left, margin.top, plotW, plotH);
+      ctx.clip();
+
+      drawGrid(ctx, xToPx, yToPx, xMin, xMax, yMin, yMax, width, height, margin);
+
+      // ระบายพื้นที่ใต้กราฟ f(x) จาก x = 0 ถึงค่า x ที่เลือก
+      if (options.area &amp;&amp; state.showArea) {
+        drawAccumulatedArea(ctx, xToPx, yToPx, xMin, xMax, yMin, yMax);
+      }
+
+      drawCurve(ctx, config.func, xToPx, yToPx, xMin, xMax, config.color, plotW);
+
+      // เส้นประแนวตั้งบอกตำแหน่ง x ที่เลือก แสดงพร้อมกันทุกกราฟ
+      drawSelectedXLine(ctx, xToPx(state.x), margin.top, margin.top + plotH);
+
+      // แสดงเส้นสัมผัสของ f(x) เฉพาะกราฟแถวแรก
+      if (options.tangent &amp;&amp; state.showTangent) {
+        drawTangent(ctx, xToPx, yToPx, xMin, xMax);
+      }
+
+      drawPoint(ctx, xToPx(state.x), yToPx(config.func(state.x)), config.pointColor);
+
+      ctx.restore();
+      drawAxesAndLabels(ctx, xToPx, yToPx, xMin, xMax, yMin, yMax, width, height, margin);
+    }
+
+    function drawGrid(ctx, xToPx, yToPx, xMin, xMax, yMin, yMax, width, height, margin) {
+      const xStep = niceStep(xMax - xMin);
+      const yStep = niceStep(yMax - yMin);
+
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = &quot;#e5e7eb&quot;;
+      ctx.setLineDash([]);
+
+      for (let x = Math.ceil(xMin / xStep) * xStep; x &lt;= xMax + 1e-10; x += xStep) {
+        ctx.beginPath();
+        ctx.moveTo(xToPx(x), margin.top);
+        ctx.lineTo(xToPx(x), height - margin.bottom);
+        ctx.stroke();
+      }
+
+      for (let y = Math.ceil(yMin / yStep) * yStep; y &lt;= yMax + 1e-10; y += yStep) {
+        ctx.beginPath();
+        ctx.moveTo(margin.left, yToPx(y));
+        ctx.lineTo(width - margin.right, yToPx(y));
+        ctx.stroke();
+      }
+    }
+
+    function drawCurve(ctx, func, xToPx, yToPx, xMin, xMax, color, plotW) {
+      const samples = Math.max(400, Math.round(plotW * 1.5));
+      ctx.beginPath();
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = color;
+      ctx.setLineDash([]);
+
+      let started = false;
+      for (let i = 0; i &lt;= samples; i++) {
+        const x = xMin + ((xMax - xMin) * i) / samples;
+        const y = func(x);
+        if (!Number.isFinite(y)) {
+          started = false;
+          continue;
+        }
+
+        const px = xToPx(x);
+        const py = yToPx(y);
+
+        if (!started) {
+          ctx.moveTo(px, py);
+          started = true;
+        } else {
+          ctx.lineTo(px, py);
+        }
+      }
+      ctx.stroke();
+    }
+
+    function drawPoint(ctx, px, py, color) {
+      if (!Number.isFinite(px) || !Number.isFinite(py)) return;
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.strokeStyle = &quot;#ffffff&quot;;
+      ctx.lineWidth = 2;
+      ctx.arc(px, py, 5.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    function drawSelectedXLine(ctx, px, top, bottom) {
+      if (!Number.isFinite(px)) return;
+      ctx.beginPath();
+      ctx.strokeStyle = &quot;#ef4444&quot;;
+      ctx.lineWidth = 1.4;
+      ctx.setLineDash([7, 5]);
+      ctx.moveTo(px, top);
+      ctx.lineTo(px, bottom);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    function drawTangent(ctx, xToPx, yToPx, xMin, xMax) {
+      const x0 = state.x;
+      const y0 = f(x0);
+      const slope = df(x0);
+
+      ctx.beginPath();
+      ctx.strokeStyle = &quot;#f59e0b&quot;;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([10, 6]);
+      ctx.moveTo(xToPx(xMin), yToPx(y0 + slope * (xMin - x0)));
+      ctx.lineTo(xToPx(xMax), yToPx(y0 + slope * (xMax - x0)));
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    function drawAccumulatedArea(ctx, xToPx, yToPx) {
+      const x0 = 0;
+      const x1 = state.x;
+      const left = Math.min(x0, x1);
+      const right = Math.max(x0, x1);
+      const samples = 260;
+
+      if (Math.abs(right - left) &lt; 1e-12) return;
+
+      ctx.beginPath();
+      ctx.moveTo(xToPx(left), yToPx(0));
+
+      for (let i = 0; i &lt;= samples; i++) {
+        const x = left + ((right - left) * i) / samples;
+        ctx.lineTo(xToPx(x), yToPx(f(x)));
+      }
+
+      ctx.lineTo(xToPx(right), yToPx(0));
+      ctx.closePath();
+      ctx.fillStyle = &quot;rgba(16, 185, 129, 0.20)&quot;;
+      ctx.fill();
+    }
+
+    function drawAxesAndLabels(ctx, xToPx, yToPx, xMin, xMax, yMin, yMax, width, height, margin) {
+      const xStep = niceStep(xMax - xMin);
+      const yStep = niceStep(yMax - yMin);
+
+      ctx.save();
+      ctx.font = &quot;12px system-ui, sans-serif&quot;;
+      ctx.fillStyle = &quot;#64748b&quot;;
+      ctx.strokeStyle = &quot;#64748b&quot;;
+      ctx.lineWidth = 1.4;
+      ctx.setLineDash([]);
+
+      // แกน x
+      const axisYPx = (0 &gt;= yMin &amp;&amp; 0 &lt;= yMax) ? yToPx(0) : height - margin.bottom;
+      ctx.beginPath();
+      ctx.moveTo(margin.left, axisYPx);
+      ctx.lineTo(width - margin.right, axisYPx);
+      ctx.stroke();
+
+      // แกน y
+      const axisXPx = (0 &gt;= xMin &amp;&amp; 0 &lt;= xMax) ? xToPx(0) : margin.left;
+      ctx.beginPath();
+      ctx.moveTo(axisXPx, margin.top);
+      ctx.lineTo(axisXPx, height - margin.bottom);
+      ctx.stroke();
+
+      // ตัวเลขบนแกน x
+      ctx.textAlign = &quot;center&quot;;
+      ctx.textBaseline = &quot;top&quot;;
+      for (let x = Math.ceil(xMin / xStep) * xStep; x &lt;= xMax + 1e-10; x += xStep) {
+        const px = xToPx(x);
+        ctx.fillText(formatTick(x), px, height - margin.bottom + 7);
+      }
+
+      // ตัวเลขบนแกน y
+      ctx.textAlign = &quot;right&quot;;
+      ctx.textBaseline = &quot;middle&quot;;
+      for (let y = Math.ceil(yMin / yStep) * yStep; y &lt;= yMax + 1e-10; y += yStep) {
+        const py = yToPx(y);
+        ctx.fillText(formatTick(y), margin.left - 8, py);
+      }
+
+      ctx.restore();
+    }
+
+    function formatTick(value) {
+      const v = Math.abs(value) &lt; 1e-10 ? 0 : value;
+      if (Math.abs(v) &gt;= 1000 || (Math.abs(v) &gt; 0 &amp;&amp; Math.abs(v) &lt; 0.01)) {
+        return v.toExponential(1);
+      }
+      return Number(v.toFixed(2)).toString();
+    }
+
+    function updateStats() {
+      $(&quot;xBadge&quot;).textContent = formatNumber(state.x);
+      $(&quot;statX&quot;).textContent = formatNumber(state.x);
+      $(&quot;statFx&quot;).textContent = formatNumber(f(state.x));
+      $(&quot;statDfx&quot;).textContent = formatNumber(df(state.x));
+      $(&quot;statArea&quot;).textContent = formatNumber(accumulatedArea(state.x));
+    }
+
+    function drawAll() {
+      updateStats();
+      drawGraph(graphConfigs.f, { tangent: true, area: true });
+      drawGraph(graphConfigs.d);
+      drawGraph(graphConfigs.i);
+    }
+
+    function syncSliderSettings() {
+      const minInput = $(&quot;sliderMin&quot;);
+      const maxInput = $(&quot;sliderMax&quot;);
+      const stepInput = $(&quot;sliderStep&quot;);
+      const slider = $(&quot;xSlider&quot;);
+
+      let min = readNumber(minInput, -10);
+      let max = readNumber(maxInput, 10);
+      let step = readNumber(stepInput, 0.1);
+
+      if (max &lt;= min) max = min + 1;
+      if (step &lt;= 0) step = 0.1;
+
+      minInput.value = min;
+      maxInput.value = max;
+      stepInput.value = step;
+
+      slider.min = String(min);
+      slider.max = String(max);
+      slider.step = String(step);
+
+      state.x = Math.min(max, Math.max(min, state.x));
+      slider.value = String(state.x);
+      drawAll();
+    }
+
+    $(&quot;xSlider&quot;).addEventListener(&quot;input&quot;, (event) =&gt; {
+      state.x = Number(event.target.value);
+      drawAll();
+    });
+
+    [&quot;sliderMin&quot;, &quot;sliderMax&quot;, &quot;sliderStep&quot;].forEach((id) =&gt; {
+      $(id).addEventListener(&quot;change&quot;, syncSliderSettings);
+    });
+
+    document.querySelectorAll(&quot;.axis-controls input&quot;).forEach((input) =&gt; {
+      input.addEventListener(&quot;input&quot;, drawAll);
+      input.addEventListener(&quot;change&quot;, drawAll);
+    });
+
+    $(&quot;toggleTangent&quot;).addEventListener(&quot;click&quot;, () =&gt; {
+      state.showTangent = !state.showTangent;
+      const button = $(&quot;toggleTangent&quot;);
+      button.className = `toggle ${state.showTangent ? &quot;on&quot; : &quot;off&quot;}`;
+      button.textContent = `เส้นสัมผัส / ความชัน: ${state.showTangent ? &quot;เปิด&quot; : &quot;ปิด&quot;}`;
+      drawAll();
+    });
+
+    $(&quot;toggleArea&quot;).addEventListener(&quot;click&quot;, () =&gt; {
+      state.showArea = !state.showArea;
+      const button = $(&quot;toggleArea&quot;);
+      button.className = `toggle ${state.showArea ? &quot;on&quot; : &quot;off&quot;}`;
+      button.textContent = `พื้นที่สะสม: ${state.showArea ? &quot;เปิด&quot; : &quot;ปิด&quot;}`;
+      drawAll();
+    });
+
+    $(&quot;resetView&quot;).addEventListener(&quot;click&quot;, () =&gt; {
+      const defaults = {
+        fXMin: -10, fXMax: 10, fYMin: -10, fYMax: 60,
+        dXMin: -10, dXMax: 10, dYMin: -20, dYMax: 30,
+        iXMin: -10, iXMax: 10, iYMin: -120, iYMax: 650
+      };
+
+      Object.entries(defaults).forEach(([id, value]) =&gt; {
+        $(id).value = value;
+      });
+
+      drawAll();
+    });
+
+    // วาดกราฟใหม่อัตโนมัติเมื่อขนาดหน้าต่างเปลี่ยน
+    window.addEventListener(&quot;resize&quot;, drawAll);
+
+    syncSliderSettings();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+" title="f(x) = x² + 5x + 6"></iframe>
       </section>
     </main>
 
