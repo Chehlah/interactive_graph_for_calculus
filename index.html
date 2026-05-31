@@ -163,6 +163,7 @@
       <button class="tab" type="button" data-page="graph1">f(x) = 2x³ − 5x² + 4x − 7</button>
       <button class="tab" type="button" data-page="graph2">f(x) = x³ − 3x² + 2x</button>
       <button class="tab" type="button" data-page="graph3">f(x) = x² + 5x + 6</button>
+      <button class="tab" type="button" data-page="graph4">f(x) = sin(x)</button>
     </nav>
 
     <main>
@@ -187,6 +188,10 @@
               <button class="graph-link" type="button" data-page="graph3">
                 <strong>หน้า 3</strong>
                 <span>f(x) = x² + 5x + 6</span>
+              </button>
+              <button class="graph-link" type="button" data-page="graph4">
+                <strong>หน้า 4</strong>
+                <span>f(x) = sin(x)</span>
               </button>
             </div>
           </div>
@@ -2169,6 +2174,625 @@
 &lt;/body&gt;
 &lt;/html&gt;
 " title="f(x) = x² + 5x + 6"></iframe>
+      </section>
+
+      <section class="view" id="graph4">
+        <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;th&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot; /&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+  &lt;title&gt;Interactive Graph: f(x) = sin(x)&lt;/title&gt;
+  &lt;style&gt;
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #d1d5db;
+      --blue: #2563eb;
+      --green: #16a34a;
+      --orange: #f97316;
+      --red: #dc2626;
+      --purple: #7c3aed;
+      --soft-blue: #dbeafe;
+      --soft-orange: #ffedd5;
+      --shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 24px 18px 10px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+      align-items: end;
+    }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input[type=&quot;number&quot;], input[type=&quot;range&quot;] {
+      width: 100%;
+    }
+
+    input[type=&quot;number&quot;] {
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+
+    input[type=&quot;range&quot;] {
+      accent-color: var(--blue);
+    }
+
+    .range-box {
+      grid-column: 1 / -1;
+      padding: 12px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+
+    .range-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 90px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .toggles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      color: var(--ink);
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .stat {
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--soft-blue);
+      border: 1px solid #bfdbfe;
+    }
+
+    .stat small {
+      display: block;
+      color: #1e40af;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .stat strong {
+      font-size: 1.15rem;
+    }
+
+    .graph-card {
+      background: var(--card);
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .graph-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #fbfdff;
+    }
+
+    .graph-head h2 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .axis-controls {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(86px, 1fr));
+      gap: 8px;
+      width: min(100%, 520px);
+    }
+
+    .axis-controls label {
+      font-size: 0.72rem;
+      margin-bottom: 3px;
+    }
+
+    .axis-controls input {
+      padding: 7px 8px;
+      font-size: 0.85rem;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 330px;
+      background: #ffffff;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .range-row {
+        grid-template-columns: 1fr;
+      }
+      .axis-controls {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      canvas { height: 280px; }
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Interactive Graph: f(x) = sin(x)&lt;/h1&gt;
+    &lt;p&gt;กราฟฟังก์ชัน อนุพันธ์ ปริพันธ์ พร้อมเส้นสัมผัสและพื้นที่สะสม&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;main class=&quot;container&quot;&gt;
+    &lt;section class=&quot;panel&quot;&gt;
+      &lt;div class=&quot;controls-grid&quot;&gt;
+        &lt;div&gt;
+          &lt;label for=&quot;sliderMin&quot;&gt;ช่วงแถบเลื่อน x_min&lt;/label&gt;
+          &lt;input id=&quot;sliderMin&quot; type=&quot;number&quot; value=&quot;-6.28&quot; step=&quot;0.01&quot;&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;label for=&quot;sliderMax&quot;&gt;ช่วงแถบเลื่อน x_max&lt;/label&gt;
+          &lt;input id=&quot;sliderMax&quot; type=&quot;number&quot; value=&quot;6.28&quot; step=&quot;0.01&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;range-box&quot;&gt;
+          &lt;div class=&quot;range-row&quot;&gt;
+            &lt;strong&gt;เลือกค่า x&lt;/strong&gt;
+            &lt;input id=&quot;xSlider&quot; type=&quot;range&quot; min=&quot;-6.28&quot; max=&quot;6.28&quot; value=&quot;1.00&quot; step=&quot;0.01&quot;&gt;
+            &lt;strong id=&quot;xSliderText&quot;&gt;x = 1.00&lt;/strong&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;toggles&quot;&gt;
+        &lt;label class=&quot;toggle&quot;&gt;&lt;input id=&quot;showTangent&quot; type=&quot;checkbox&quot; checked&gt; แสดงเส้นสัมผัส / ความชัน&lt;/label&gt;
+        &lt;label class=&quot;toggle&quot;&gt;&lt;input id=&quot;showArea&quot; type=&quot;checkbox&quot; checked&gt; แสดงพื้นที่ใต้กราฟสะสม&lt;/label&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;stats&quot;&gt;
+        &lt;div class=&quot;stat&quot;&gt;&lt;small&gt;x&lt;/small&gt;&lt;strong id=&quot;statX&quot;&gt;-&lt;/strong&gt;&lt;/div&gt;
+        &lt;div class=&quot;stat&quot;&gt;&lt;small&gt;f(x)&lt;/small&gt;&lt;strong id=&quot;statFx&quot;&gt;-&lt;/strong&gt;&lt;/div&gt;
+        &lt;div class=&quot;stat&quot;&gt;&lt;small&gt;f′(x) / ความชัน&lt;/small&gt;&lt;strong id=&quot;statDfx&quot;&gt;-&lt;/strong&gt;&lt;/div&gt;
+        &lt;div class=&quot;stat&quot;&gt;&lt;small&gt;∫₀ˣ f(t)dt&lt;/small&gt;&lt;strong id=&quot;statArea&quot;&gt;-&lt;/strong&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;p class=&quot;note&quot;&gt;หมายเหตุ: สำหรับ f(x)=sin(x), f′(x)=cos(x) และ ∫₀ˣ sin(t)dt = 1 − cos(x)&lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;section class=&quot;graph-card&quot;&gt;
+      &lt;div class=&quot;graph-head&quot;&gt;
+        &lt;h2&gt;แถวที่ 1: f(x) = sin(x)&lt;/h2&gt;
+        &lt;div class=&quot;axis-controls&quot; data-graph=&quot;main&quot;&gt;
+          &lt;div&gt;&lt;label&gt;x_min&lt;/label&gt;&lt;input id=&quot;mainXMin&quot; type=&quot;number&quot; value=&quot;-6.28&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;x_max&lt;/label&gt;&lt;input id=&quot;mainXMax&quot; type=&quot;number&quot; value=&quot;6.28&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_min&lt;/label&gt;&lt;input id=&quot;mainYMin&quot; type=&quot;number&quot; value=&quot;-1.5&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_max&lt;/label&gt;&lt;input id=&quot;mainYMax&quot; type=&quot;number&quot; value=&quot;1.5&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;canvas id=&quot;mainCanvas&quot;&gt;&lt;/canvas&gt;
+    &lt;/section&gt;
+
+    &lt;section class=&quot;graph-card&quot;&gt;
+      &lt;div class=&quot;graph-head&quot;&gt;
+        &lt;h2&gt;แถวที่ 2: f′(x) = cos(x)&lt;/h2&gt;
+        &lt;div class=&quot;axis-controls&quot; data-graph=&quot;derivative&quot;&gt;
+          &lt;div&gt;&lt;label&gt;x_min&lt;/label&gt;&lt;input id=&quot;derXMin&quot; type=&quot;number&quot; value=&quot;-6.28&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;x_max&lt;/label&gt;&lt;input id=&quot;derXMax&quot; type=&quot;number&quot; value=&quot;6.28&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_min&lt;/label&gt;&lt;input id=&quot;derYMin&quot; type=&quot;number&quot; value=&quot;-1.5&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_max&lt;/label&gt;&lt;input id=&quot;derYMax&quot; type=&quot;number&quot; value=&quot;1.5&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;canvas id=&quot;derCanvas&quot;&gt;&lt;/canvas&gt;
+    &lt;/section&gt;
+
+    &lt;section class=&quot;graph-card&quot;&gt;
+      &lt;div class=&quot;graph-head&quot;&gt;
+        &lt;h2&gt;แถวที่ 3: ∫f(x)dx โดย C = 0 → F(x) = -cos(x)&lt;/h2&gt;
+        &lt;div class=&quot;axis-controls&quot; data-graph=&quot;integral&quot;&gt;
+          &lt;div&gt;&lt;label&gt;x_min&lt;/label&gt;&lt;input id=&quot;intXMin&quot; type=&quot;number&quot; value=&quot;-6.28&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;x_max&lt;/label&gt;&lt;input id=&quot;intXMax&quot; type=&quot;number&quot; value=&quot;6.28&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_min&lt;/label&gt;&lt;input id=&quot;intYMin&quot; type=&quot;number&quot; value=&quot;-1.5&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;label&gt;y_max&lt;/label&gt;&lt;input id=&quot;intYMax&quot; type=&quot;number&quot; value=&quot;1.5&quot; step=&quot;0.1&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;canvas id=&quot;intCanvas&quot;&gt;&lt;/canvas&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;script&gt;
+    /******************************************************************
+     * จุดสำคัญสำหรับแก้นิพจน์อื่น
+     * 1) แก้ f(x) เป็นฟังก์ชันหลัก
+     * 2) แก้ df(x) เป็นอนุพันธ์ของ f(x)
+     * 3) แก้ F(x) เป็นปริพันธ์ไม่จำกัด โดยให้ C = 0
+     * 4) แก้ areaFromZero(x) เป็นพื้นที่สะสม/ปริพันธ์จำกัดเขตจาก 0 ถึง x
+     ******************************************************************/
+    function f(x) {
+      return Math.sin(x);
+    }
+
+    function df(x) {
+      return Math.cos(x);
+    }
+
+    // ปริพันธ์ไม่จำกัดของ sin(x) เมื่อ C = 0 คือ -cos(x)
+    function F(x) {
+      return -Math.cos(x);
+    }
+
+    // พื้นที่สะสมแบบ signed area: ∫_0^x sin(t)dt = 1 - cos(x)
+    function areaFromZero(x) {
+      return 1 - Math.cos(x);
+    }
+
+    const canvases = {
+      main: document.getElementById(&#x27;mainCanvas&#x27;),
+      der: document.getElementById(&#x27;derCanvas&#x27;),
+      int: document.getElementById(&#x27;intCanvas&#x27;)
+    };
+
+    const inputs = {
+      sliderMin: document.getElementById(&#x27;sliderMin&#x27;),
+      sliderMax: document.getElementById(&#x27;sliderMax&#x27;),
+      xSlider: document.getElementById(&#x27;xSlider&#x27;),
+      showTangent: document.getElementById(&#x27;showTangent&#x27;),
+      showArea: document.getElementById(&#x27;showArea&#x27;),
+      mainXMin: document.getElementById(&#x27;mainXMin&#x27;),
+      mainXMax: document.getElementById(&#x27;mainXMax&#x27;),
+      mainYMin: document.getElementById(&#x27;mainYMin&#x27;),
+      mainYMax: document.getElementById(&#x27;mainYMax&#x27;),
+      derXMin: document.getElementById(&#x27;derXMin&#x27;),
+      derXMax: document.getElementById(&#x27;derXMax&#x27;),
+      derYMin: document.getElementById(&#x27;derYMin&#x27;),
+      derYMax: document.getElementById(&#x27;derYMax&#x27;),
+      intXMin: document.getElementById(&#x27;intXMin&#x27;),
+      intXMax: document.getElementById(&#x27;intXMax&#x27;),
+      intYMin: document.getElementById(&#x27;intYMin&#x27;),
+      intYMax: document.getElementById(&#x27;intYMax&#x27;)
+    };
+
+    const labels = {
+      xSliderText: document.getElementById(&#x27;xSliderText&#x27;),
+      statX: document.getElementById(&#x27;statX&#x27;),
+      statFx: document.getElementById(&#x27;statFx&#x27;),
+      statDfx: document.getElementById(&#x27;statDfx&#x27;),
+      statArea: document.getElementById(&#x27;statArea&#x27;)
+    };
+
+    function getAxis(prefix) {
+      const xMin = Number(inputs[prefix + &#x27;XMin&#x27;].value);
+      const xMax = Number(inputs[prefix + &#x27;XMax&#x27;].value);
+      const yMin = Number(inputs[prefix + &#x27;YMin&#x27;].value);
+      const yMax = Number(inputs[prefix + &#x27;YMax&#x27;].value);
+      return { xMin, xMax, yMin, yMax };
+    }
+
+    function validAxis(axis) {
+      return Number.isFinite(axis.xMin) &amp;&amp; Number.isFinite(axis.xMax) &amp;&amp;
+             Number.isFinite(axis.yMin) &amp;&amp; Number.isFinite(axis.yMax) &amp;&amp;
+             axis.xMin &lt; axis.xMax &amp;&amp; axis.yMin &lt; axis.yMax;
+    }
+
+    function resizeCanvas(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      const ctx = canvas.getContext(&#x27;2d&#x27;);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { ctx, width: rect.width, height: rect.height };
+    }
+
+    function makeMapper(width, height, axis, pad) {
+      const innerW = width - pad.left - pad.right;
+      const innerH = height - pad.top - pad.bottom;
+      return {
+        sx: x =&gt; pad.left + ((x - axis.xMin) / (axis.xMax - axis.xMin)) * innerW,
+        sy: y =&gt; pad.top + (1 - (y - axis.yMin) / (axis.yMax - axis.yMin)) * innerH
+      };
+    }
+
+    function drawGrid(ctx, width, height, axis, map, pad) {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = &#x27;#ffffff&#x27;;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.strokeStyle = &#x27;#e5e7eb&#x27;;
+      ctx.lineWidth = 1;
+      ctx.fillStyle = &#x27;#6b7280&#x27;;
+      ctx.font = &#x27;12px system-ui, sans-serif&#x27;;
+
+      const xStep = niceStep((axis.xMax - axis.xMin) / 8);
+      const yStep = niceStep((axis.yMax - axis.yMin) / 6);
+
+      for (let x = Math.ceil(axis.xMin / xStep) * xStep; x &lt;= axis.xMax + 1e-9; x += xStep) {
+        const px = map.sx(x);
+        ctx.beginPath();
+        ctx.moveTo(px, pad.top);
+        ctx.lineTo(px, height - pad.bottom);
+        ctx.stroke();
+        ctx.fillText(formatNum(x), px - 12, height - pad.bottom + 18);
+      }
+
+      for (let y = Math.ceil(axis.yMin / yStep) * yStep; y &lt;= axis.yMax + 1e-9; y += yStep) {
+        const py = map.sy(y);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, py);
+        ctx.lineTo(width - pad.right, py);
+        ctx.stroke();
+        ctx.fillText(formatNum(y), 8, py + 4);
+      }
+
+      // วาดแกน x และ y ถ้าอยู่ในช่วงที่มองเห็น
+      ctx.strokeStyle = &#x27;#9ca3af&#x27;;
+      ctx.lineWidth = 1.5;
+      if (axis.yMin &lt;= 0 &amp;&amp; axis.yMax &gt;= 0) {
+        const y0 = map.sy(0);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y0);
+        ctx.lineTo(width - pad.right, y0);
+        ctx.stroke();
+      }
+      if (axis.xMin &lt;= 0 &amp;&amp; axis.xMax &gt;= 0) {
+        const x0 = map.sx(0);
+        ctx.beginPath();
+        ctx.moveTo(x0, pad.top);
+        ctx.lineTo(x0, height - pad.bottom);
+        ctx.stroke();
+      }
+    }
+
+    function niceStep(raw) {
+      const pow = Math.pow(10, Math.floor(Math.log10(raw)));
+      const n = raw / pow;
+      if (n &lt; 1.5) return 1 * pow;
+      if (n &lt; 3) return 2 * pow;
+      if (n &lt; 7) return 5 * pow;
+      return 10 * pow;
+    }
+
+    function drawFunction(ctx, width, axis, map, fn, color) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      const samples = Math.max(400, Math.round(width * 1.2));
+      let started = false;
+      for (let i = 0; i &lt;= samples; i++) {
+        const x = axis.xMin + (i / samples) * (axis.xMax - axis.xMin);
+        const y = fn(x);
+        if (!Number.isFinite(y)) { started = false; continue; }
+        const px = map.sx(x);
+        const py = map.sy(y);
+        if (!started) {
+          ctx.moveTo(px, py);
+          started = true;
+        } else {
+          ctx.lineTo(px, py);
+        }
+      }
+      ctx.stroke();
+    }
+
+    function drawSelectedPoint(ctx, map, x, y, color) {
+      ctx.save();
+      ctx.setLineDash([6, 5]);
+      ctx.strokeStyle = &#x27;#64748b&#x27;;
+      ctx.lineWidth = 1.2;
+      const px = map.sx(x);
+      const py = map.sy(y);
+      ctx.beginPath();
+      ctx.moveTo(px, 18);
+      ctx.lineTo(px, ctx.canvas.getBoundingClientRect().height - 36);
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.fillStyle = color;
+      ctx.strokeStyle = &#x27;#ffffff&#x27;;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    function drawTangent(ctx, axis, map, x0) {
+      const y0 = f(x0);
+      const m = df(x0);
+      const tangent = x =&gt; m * (x - x0) + y0;
+      ctx.save();
+      ctx.strokeStyle = &#x27;#dc2626&#x27;;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([9, 6]);
+      ctx.beginPath();
+      ctx.moveTo(map.sx(axis.xMin), map.sy(tangent(axis.xMin)));
+      ctx.lineTo(map.sx(axis.xMax), map.sy(tangent(axis.xMax)));
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawAccumulatedArea(ctx, axis, map, xSelected) {
+      const a = 0;
+      const b = xSelected;
+      const left = Math.min(a, b);
+      const right = Math.max(a, b);
+      const visibleLeft = Math.max(left, axis.xMin);
+      const visibleRight = Math.min(right, axis.xMax);
+      if (visibleLeft &gt;= visibleRight) return;
+
+      ctx.save();
+      ctx.fillStyle = &#x27;rgba(249, 115, 22, 0.25)&#x27;;
+      ctx.strokeStyle = &#x27;rgba(249, 115, 22, 0.65)&#x27;;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(map.sx(visibleLeft), map.sy(0));
+      const samples = 220;
+      for (let i = 0; i &lt;= samples; i++) {
+        const x = visibleLeft + (i / samples) * (visibleRight - visibleLeft);
+        ctx.lineTo(map.sx(x), map.sy(f(x)));
+      }
+      ctx.lineTo(map.sx(visibleRight), map.sy(0));
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawGraph(canvas, axis, fn, color, selectedX, options = {}) {
+      const { ctx, width, height } = resizeCanvas(canvas);
+      const pad = { left: 54, right: 20, top: 18, bottom: 36 };
+
+      if (!validAxis(axis)) {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = &#x27;#991b1b&#x27;;
+        ctx.font = &#x27;16px system-ui, sans-serif&#x27;;
+        ctx.fillText(&#x27;กรุณากำหนดช่วงแกนให้ถูกต้อง: min ต้องน้อยกว่า max&#x27;, 24, 50);
+        return;
+      }
+
+      const map = makeMapper(width, height, axis, pad);
+      drawGrid(ctx, width, height, axis, map, pad);
+
+      if (options.area &amp;&amp; inputs.showArea.checked) {
+        drawAccumulatedArea(ctx, axis, map, selectedX);
+      }
+
+      drawFunction(ctx, width, axis, map, fn, color);
+
+      if (options.tangent &amp;&amp; inputs.showTangent.checked) {
+        drawTangent(ctx, axis, map, selectedX);
+      }
+
+      drawSelectedPoint(ctx, map, selectedX, fn(selectedX), color);
+    }
+
+    function formatNum(value) {
+      if (Math.abs(value) &lt; 1e-10) value = 0;
+      return Number(value).toFixed(3).replace(/\.000$/, &#x27;&#x27;).replace(/(\.\d*?)0+$/, &#x27;$1&#x27;);
+    }
+
+    function updateSliderRange() {
+      const min = Number(inputs.sliderMin.value);
+      const max = Number(inputs.sliderMax.value);
+      if (!Number.isFinite(min) || !Number.isFinite(max) || min &gt;= max) return;
+      inputs.xSlider.min = min;
+      inputs.xSlider.max = max;
+      let x = Number(inputs.xSlider.value);
+      if (x &lt; min) x = min;
+      if (x &gt; max) x = max;
+      inputs.xSlider.value = x;
+      drawAll();
+    }
+
+    function drawAll() {
+      const x = Number(inputs.xSlider.value);
+      labels.xSliderText.textContent = &#x27;x = &#x27; + formatNum(x);
+      labels.statX.textContent = formatNum(x);
+      labels.statFx.textContent = formatNum(f(x));
+      labels.statDfx.textContent = formatNum(df(x));
+      labels.statArea.textContent = formatNum(areaFromZero(x));
+
+      drawGraph(canvases.main, getAxis(&#x27;main&#x27;), f, &#x27;#2563eb&#x27;, x, { tangent: true, area: true });
+      drawGraph(canvases.der, getAxis(&#x27;der&#x27;), df, &#x27;#16a34a&#x27;, x, { tangent: false, area: false });
+      drawGraph(canvases.int, getAxis(&#x27;int&#x27;), F, &#x27;#7c3aed&#x27;, x, { tangent: false, area: false });
+    }
+
+    // ผูก event ให้ทุก input วาดกราฟใหม่ทันทีเมื่อมีการเปลี่ยนค่า
+    Object.values(inputs).forEach(input =&gt; {
+      input.addEventListener(&#x27;input&#x27;, () =&gt; {
+        if (input === inputs.sliderMin || input === inputs.sliderMax) {
+          updateSliderRange();
+        } else {
+          drawAll();
+        }
+      });
+    });
+
+    window.addEventListener(&#x27;resize&#x27;, drawAll);
+    updateSliderRange();
+    drawAll();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+" title="f(x) = sin(x)"></iframe>
       </section>
     </main>
 
