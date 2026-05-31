@@ -1,733 +1,229 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interactive Graph: f(x) = x² + 5x + 6</title>
-  <style>
-    :root {
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --line: #d8dee9;
-      --text: #1f2937;
-      --muted: #64748b;
-      --accent: #2563eb;
-      --accent-2: #7c3aed;
-      --success: #059669;
-      --danger: #dc2626;
-      --grid: #e5e7eb;
-      --axis: #64748b;
-      --area: rgba(16, 185, 129, 0.20);
-      --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    .page {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    h1 {
-      margin: 0 0 6px;
-      font-size: clamp(1.45rem, 3vw, 2.15rem);
-    }
-
-    .subtitle {
-      margin: 0 0 18px;
-      color: var(--muted);
-    }
-
-    .panel,
-    .graph-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-    }
-
-    .panel {
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-
-    .control-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 12px;
-      align-items: end;
-    }
-
-    label {
-      display: block;
-      font-size: 0.88rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    input[type="number"] {
-      width: 100%;
-      padding: 9px 10px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      font: inherit;
-      background: #fff;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      accent-color: var(--accent);
-    }
-
-    .slider-row {
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .x-badge {
-      min-width: 94px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: #eff6ff;
-      color: #1d4ed8;
-      text-align: center;
-      font-weight: 800;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    button {
-      border: none;
-      border-radius: 999px;
-      padding: 10px 14px;
-      font: inherit;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.15s ease;
-    }
-
-    button:hover { transform: translateY(-1px); }
-
-    .toggle.on {
-      background: #dcfce7;
-      color: #047857;
-    }
-
-    .toggle.off {
-      background: #e5e7eb;
-      color: #475569;
-    }
-
-    .reset {
-      background: #e0e7ff;
-      color: #3730a3;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .stat {
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #fbfdff;
-    }
-
-    .stat-name {
-      color: var(--muted);
-      font-size: 0.84rem;
-      margin-bottom: 3px;
-    }
-
-    .stat-value {
-      font-size: 1.05rem;
-      font-weight: 800;
-      word-break: break-word;
-    }
-
-    .graphs {
-      display: grid;
-      gap: 16px;
-    }
-
-    .graph-card {
-      padding: 14px;
-    }
-
-    .graph-header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .graph-title {
-      font-weight: 900;
-      font-size: 1.08rem;
-    }
-
-    .graph-note {
-      color: var(--muted);
-      font-size: 0.86rem;
-    }
-
-    .canvas-wrap {
-      width: 100%;
-      height: 340px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      overflow: hidden;
-      background: #fff;
-    }
-
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .axis-controls {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(110px, 1fr));
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .small {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 5px;
-    }
-
-    @media (max-width: 650px) {
-      .page { padding: 12px; }
-      .axis-controls { grid-template-columns: repeat(2, minmax(110px, 1fr)); }
-      .canvas-wrap { height: 290px; }
-    }
-  </style>
-</head>
-<body>
-  <main class="page">
-    <h1>Interactive Graph: f(x) = x² + 5x + 6</h1>
-    <p class="subtitle">เลื่อนค่า x เพื่อดูค่าฟังก์ชัน อนุพันธ์ เส้นสัมผัส และพื้นที่ใต้กราฟสะสมพร้อมกัน</p>
-
-    <section class="panel">
-      <div class="control-grid">
-        <div>
-          <label for="sliderMin">ค่าต่ำสุดของแถบเลื่อน x</label>
-          <input id="sliderMin" type="number" value="-10" step="0.5" />
-        </div>
-        <div>
-          <label for="sliderMax">ค่าสูงสุดของแถบเลื่อน x</label>
-          <input id="sliderMax" type="number" value="10" step="0.5" />
-        </div>
-        <div>
-          <label for="sliderStep">ความละเอียดของแถบเลื่อน</label>
-          <input id="sliderStep" type="number" value="0.1" step="0.01" min="0.001" />
-        </div>
-      </div>
-
-      <div class="slider-row">
-        <input id="xSlider" type="range" min="-10" max="10" step="0.1" value="0" />
-        <div class="x-badge">x = <span id="xBadge">0</span></div>
-      </div>
-
-      <div class="button-row">
-        <button id="toggleTangent" class="toggle on" type="button">เส้นสัมผัส / ความชัน: เปิด</button>
-        <button id="toggleArea" class="toggle on" type="button">พื้นที่สะสม: เปิด</button>
-        <button id="resetView" class="reset" type="button">คืนค่าช่วงแกนเริ่มต้น</button>
-      </div>
-
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-name">ค่าปัจจุบันของ x</div>
-          <div class="stat-value" id="statX"></div>
-        </div>
-        <div class="stat">
-          <div class="stat-name">f(x)</div>
-          <div class="stat-value" id="statFx"></div>
-        </div>
-        <div class="stat">
-          <div class="stat-name">f′(x)</div>
-          <div class="stat-value" id="statDfx"></div>
-        </div>
-        <div class="stat">
-          <div class="stat-name">∫₀ˣ f(t)dt</div>
-          <div class="stat-value" id="statArea"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="graphs">
-      <article class="graph-card">
-        <div class="graph-header">
-          <div class="graph-title">แถวที่ 1: f(x) = x² + 5x + 6</div>
-          <div class="graph-note">แสดงจุดที่เลือก เส้นสัมผัส และพื้นที่สะสมจาก x = 0</div>
-        </div>
-        <div class="canvas-wrap"><canvas id="canvasF"></canvas></div>
-        <div class="axis-controls" data-prefix="f">
-          <div><label>x_min</label><input id="fXMin" type="number" value="-10" step="0.5"></div>
-          <div><label>x_max</label><input id="fXMax" type="number" value="10" step="0.5"></div>
-          <div><label>y_min</label><input id="fYMin" type="number" value="-10" step="0.5"></div>
-          <div><label>y_max</label><input id="fYMax" type="number" value="60" step="0.5"></div>
-        </div>
-      </article>
-
-      <article class="graph-card">
-        <div class="graph-header">
-          <div class="graph-title">แถวที่ 2: f′(x) = 2x + 5</div>
-          <div class="graph-note">ค่าบนกราฟนี้คือความชันของ f(x)</div>
-        </div>
-        <div class="canvas-wrap"><canvas id="canvasD"></canvas></div>
-        <div class="axis-controls" data-prefix="d">
-          <div><label>x_min</label><input id="dXMin" type="number" value="-10" step="0.5"></div>
-          <div><label>x_max</label><input id="dXMax" type="number" value="10" step="0.5"></div>
-          <div><label>y_min</label><input id="dYMin" type="number" value="-20" step="0.5"></div>
-          <div><label>y_max</label><input id="dYMax" type="number" value="30" step="0.5"></div>
-        </div>
-      </article>
-
-      <article class="graph-card">
-        <div class="graph-header">
-          <div class="graph-title">แถวที่ 3: ∫f(x)dx = x³/3 + 5x²/2 + 6x, เมื่อ C = 0</div>
-          <div class="graph-note">กราฟปริพันธ์ไม่จำกัดเขียนโดยกำหนดค่าคงที่ C = 0</div>
-        </div>
-        <div class="canvas-wrap"><canvas id="canvasI"></canvas></div>
-        <div class="axis-controls" data-prefix="i">
-          <div><label>x_min</label><input id="iXMin" type="number" value="-10" step="0.5"></div>
-          <div><label>x_max</label><input id="iXMax" type="number" value="10" step="0.5"></div>
-          <div><label>y_min</label><input id="iYMin" type="number" value="-120" step="0.5"></div>
-          <div><label>y_max</label><input id="iYMax" type="number" value="650" step="0.5"></div>
-        </div>
-      </article>
-    </section>
-
-    <p class="small">
-      หมายเหตุ: พื้นที่สะสมใช้ค่าอินทิกรัลแบบมีเครื่องหมาย (signed integral) จาก 0 ถึง x
-    </p>
-  </main>
-
-  <script>
-    "use strict";
-
-    /*
-      ==========================================================
-      จุดสำคัญสำหรับแก้ไขนิพจน์ในอนาคต
-      แก้ฟังก์ชัน 3 บรรทัดนี้ให้ตรงกับนิพจน์ใหม่:
-      1) f(x)       ฟังก์ชันหลัก
-      2) df(x)      อนุพันธ์ของ f(x)
-      3) integral(x) ปริพันธ์ของ f(x) โดยกำหนด C = 0
-      ==========================================================
-    */
-    const f = (x) => x * x + 5 * x + 6;
-    const df = (x) => 2 * x + 5;
-    const integral = (x) => (x * x * x) / 3 + (5 * x * x) / 2 + 6 * x;
-
-    // ปริพันธ์สะสมจาก 0 ถึง x: F(x) - F(0)
-    const accumulatedArea = (x) => integral(x) - integral(0);
-
-    const $ = (id) => document.getElementById(id);
-
-    const state = {
-      x: 0,
-      showTangent: true,
-      showArea: true
-    };
-
-    const graphConfigs = {
-      f: {
-        canvas: $("canvasF"),
-        func: f,
-        xMin: $("fXMin"), xMax: $("fXMax"),
-        yMin: $("fYMin"), yMax: $("fYMax"),
-        color: "#2563eb",
-        pointColor: "#dc2626"
-      },
-      d: {
-        canvas: $("canvasD"),
-        func: df,
-        xMin: $("dXMin"), xMax: $("dXMax"),
-        yMin: $("dYMin"), yMax: $("dYMax"),
-        color: "#7c3aed",
-        pointColor: "#dc2626"
-      },
-      i: {
-        canvas: $("canvasI"),
-        func: integral,
-        xMin: $("iXMin"), xMax: $("iXMax"),
-        yMin: $("iYMin"), yMax: $("iYMax"),
-        color: "#059669",
-        pointColor: "#dc2626"
-      }
-    };
-
-    function readNumber(input, fallback) {
-      const value = Number(input.value);
-      return Number.isFinite(value) ? value : fallback;
-    }
-
-    function formatNumber(value) {
-      if (!Number.isFinite(value)) return "ไม่สามารถคำนวณได้";
-      const rounded = Math.abs(value) < 1e-10 ? 0 : value;
-      return Number(rounded.toFixed(4)).toLocaleString("th-TH", {
-        maximumFractionDigits: 4
-      });
-    }
-
-    function getBounds(config) {
-      let xMin = readNumber(config.xMin, -10);
-      let xMax = readNumber(config.xMax, 10);
-      let yMin = readNumber(config.yMin, -10);
-      let yMax = readNumber(config.yMax, 10);
-
-      // ป้องกันช่วงแกนผิดพลาด เช่น min มากกว่า max หรือมีค่าเท่ากัน
-      if (xMax <= xMin) xMax = xMin + 1;
-      if (yMax <= yMin) yMax = yMin + 1;
-
-      return { xMin, xMax, yMin, yMax };
-    }
-
-    function resizeCanvas(canvas) {
-      const rect = canvas.getBoundingClientRect();
-      const ratio = window.devicePixelRatio || 1;
-      const width = Math.max(1, Math.round(rect.width * ratio));
-      const height = Math.max(1, Math.round(rect.height * ratio));
-
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Interactive Graphs</title>
+    <style>
+      :root {
+        --bg: #f4f7fb;
+        --surface: #ffffff;
+        --text: #1f2937;
+        --muted: #64748b;
+        --line: #d8dee9;
+        --accent: #2563eb;
+        --accent-soft: #eff6ff;
+        --shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
       }
 
-      const ctx = canvas.getContext("2d");
-      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-      return { ctx, width: rect.width, height: rect.height };
-    }
-
-    function niceStep(range, targetLines = 8) {
-      const rough = Math.abs(range) / targetLines;
-      const power = Math.pow(10, Math.floor(Math.log10(rough || 1)));
-      const fraction = rough / power;
-      let niceFraction = 1;
-      if (fraction >= 5) niceFraction = 5;
-      else if (fraction >= 2) niceFraction = 2;
-      return niceFraction * power;
-    }
-
-    function drawGraph(config, options = {}) {
-      const { ctx, width, height } = resizeCanvas(config.canvas);
-      const { xMin, xMax, yMin, yMax } = getBounds(config);
-
-      const margin = { left: 58, right: 18, top: 20, bottom: 36 };
-      const plotW = width - margin.left - margin.right;
-      const plotH = height - margin.top - margin.bottom;
-
-      const xToPx = (x) => margin.left + ((x - xMin) / (xMax - xMin)) * plotW;
-      const yToPx = (y) => margin.top + ((yMax - y) / (yMax - yMin)) * plotH;
-
-      ctx.clearRect(0, 0, width, height);
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(margin.left, margin.top, plotW, plotH);
-      ctx.clip();
-
-      drawGrid(ctx, xToPx, yToPx, xMin, xMax, yMin, yMax, width, height, margin);
-
-      // ระบายพื้นที่ใต้กราฟ f(x) จาก x = 0 ถึงค่า x ที่เลือก
-      if (options.area && state.showArea) {
-        drawAccumulatedArea(ctx, xToPx, yToPx, xMin, xMax, yMin, yMax);
+      * {
+        box-sizing: border-box;
       }
 
-      drawCurve(ctx, config.func, xToPx, yToPx, xMin, xMax, config.color, plotW);
-
-      // เส้นประแนวตั้งบอกตำแหน่ง x ที่เลือก แสดงพร้อมกันทุกกราฟ
-      drawSelectedXLine(ctx, xToPx(state.x), margin.top, margin.top + plotH);
-
-      // แสดงเส้นสัมผัสของ f(x) เฉพาะกราฟแถวแรก
-      if (options.tangent && state.showTangent) {
-        drawTangent(ctx, xToPx, yToPx, xMin, xMax);
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
       }
 
-      drawPoint(ctx, xToPx(state.x), yToPx(config.func(state.x)), config.pointColor);
-
-      ctx.restore();
-      drawAxesAndLabels(ctx, xToPx, yToPx, xMin, xMax, yMin, yMax, width, height, margin);
-    }
-
-    function drawGrid(ctx, xToPx, yToPx, xMin, xMax, yMin, yMax, width, height, margin) {
-      const xStep = niceStep(xMax - xMin);
-      const yStep = niceStep(yMax - yMin);
-
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = "#e5e7eb";
-      ctx.setLineDash([]);
-
-      for (let x = Math.ceil(xMin / xStep) * xStep; x <= xMax + 1e-10; x += xStep) {
-        ctx.beginPath();
-        ctx.moveTo(xToPx(x), margin.top);
-        ctx.lineTo(xToPx(x), height - margin.bottom);
-        ctx.stroke();
+      .tabs {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        width: 100%;
+        padding: 12px clamp(12px, 3vw, 28px);
+        overflow-x: auto;
+        background: rgba(255, 255, 255, 0.92);
+        border-bottom: 1px solid var(--line);
+        box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+        backdrop-filter: blur(14px);
       }
 
-      for (let y = Math.ceil(yMin / yStep) * yStep; y <= yMax + 1e-10; y += yStep) {
-        ctx.beginPath();
-        ctx.moveTo(margin.left, yToPx(y));
-        ctx.lineTo(width - margin.right, yToPx(y));
-        ctx.stroke();
+      .tab {
+        flex: 0 0 auto;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 10px 14px;
+        background: var(--surface);
+        color: var(--text);
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
       }
-    }
 
-    function drawCurve(ctx, func, xToPx, yToPx, xMin, xMax, color, plotW) {
-      const samples = Math.max(400, Math.round(plotW * 1.5));
-      ctx.beginPath();
-      ctx.lineWidth = 2.5;
-      ctx.strokeStyle = color;
-      ctx.setLineDash([]);
+      .tab:hover {
+        border-color: #93c5fd;
+        background: var(--accent-soft);
+      }
 
-      let started = false;
-      for (let i = 0; i <= samples; i++) {
-        const x = xMin + ((xMax - xMin) * i) / samples;
-        const y = func(x);
-        if (!Number.isFinite(y)) {
-          started = false;
-          continue;
+      .tab.active {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #ffffff;
+      }
+
+      .view {
+        display: none;
+      }
+
+      .view.active {
+        display: block;
+      }
+
+      .home {
+        width: min(1040px, calc(100% - 32px));
+        margin: 32px auto;
+      }
+
+      .home-panel {
+        padding: clamp(20px, 4vw, 34px);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: clamp(1.65rem, 4vw, 2.6rem);
+        line-height: 1.15;
+      }
+
+      .intro {
+        max-width: 720px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 1.02rem;
+        line-height: 1.7;
+      }
+
+      .graph-links {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .graph-link {
+        min-height: 112px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfdff;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .graph-link strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--accent);
+        font-size: 1rem;
+      }
+
+      .graph-link span {
+        color: var(--text);
+        font-weight: 800;
+        line-height: 1.35;
+      }
+
+      iframe {
+        display: block;
+        width: 100%;
+        height: calc(100vh - 65px);
+        border: 0;
+        background: #ffffff;
+      }
+
+      @media (max-width: 640px) {
+        .tabs {
+          padding: 10px;
         }
 
-        const px = xToPx(x);
-        const py = yToPx(y);
+        .tab {
+          padding: 9px 12px;
+          font-size: 0.92rem;
+        }
 
-        if (!started) {
-          ctx.moveTo(px, py);
-          started = true;
-        } else {
-          ctx.lineTo(px, py);
+        iframe {
+          height: calc(100vh - 58px);
         }
       }
-      ctx.stroke();
-    }
+    </style>
+  </head>
+  <body>
+    <nav class="tabs" aria-label="เลือกหน้า">
+      <button class="tab active" type="button" data-page="home">Home</button>
+      <button class="tab" type="button" data-page="graph1">f(x) = 2x³ − 5x² + 4x − 7</button>
+      <button class="tab" type="button" data-page="graph2">f(x) = x³ − 3x² + 2x</button>
+      <button class="tab" type="button" data-page="graph3">f(x) = x² + 5x + 6</button>
+    </nav>
 
-    function drawPoint(ctx, px, py, color) {
-      if (!Number.isFinite(px) || !Number.isFinite(py)) return;
-      ctx.beginPath();
-      ctx.fillStyle = color;
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 2;
-      ctx.arc(px, py, 5.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-    }
+    <main>
+      <section class="view active" id="home">
+        <div class="home">
+          <div class="home-panel">
+            <h1>Interactive Graphs</h1>
+            <p class="intro">
+              เลือกแท็บด้านบนเพื่อเปิดกราฟ Interactive แต่ละฟังก์ชัน
+              หรือกดจากรายการด้านล่างเพื่อไปยังหน้ากราฟที่ต้องการ
+            </p>
 
-    function drawSelectedXLine(ctx, px, top, bottom) {
-      if (!Number.isFinite(px)) return;
-      ctx.beginPath();
-      ctx.strokeStyle = "#ef4444";
-      ctx.lineWidth = 1.4;
-      ctx.setLineDash([7, 5]);
-      ctx.moveTo(px, top);
-      ctx.lineTo(px, bottom);
-      ctx.stroke();
-      ctx.setLineDash([]);
-    }
+            <div class="graph-links">
+              <button class="graph-link" type="button" data-page="graph1">
+                <strong>หน้า 1</strong>
+                <span>f(x) = 2x³ − 5x² + 4x − 7</span>
+              </button>
+              <button class="graph-link" type="button" data-page="graph2">
+                <strong>หน้า 2</strong>
+                <span>f(x) = x³ − 3x² + 2x</span>
+              </button>
+              <button class="graph-link" type="button" data-page="graph3">
+                <strong>หน้า 3</strong>
+                <span>f(x) = x² + 5x + 6</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    function drawTangent(ctx, xToPx, yToPx, xMin, xMax) {
-      const x0 = state.x;
-      const y0 = f(x0);
-      const slope = df(x0);
+      <section class="view" id="graph1">
+        <iframe src="interactive_graph_1.html" title="f(x) = 2x³ − 5x² + 4x − 7"></iframe>
+      </section>
 
-      ctx.beginPath();
-      ctx.strokeStyle = "#f59e0b";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([10, 6]);
-      ctx.moveTo(xToPx(xMin), yToPx(y0 + slope * (xMin - x0)));
-      ctx.lineTo(xToPx(xMax), yToPx(y0 + slope * (xMax - x0)));
-      ctx.stroke();
-      ctx.setLineDash([]);
-    }
+      <section class="view" id="graph2">
+        <iframe src="interactive_graph_2.html" title="f(x) = x³ − 3x² + 2x"></iframe>
+      </section>
 
-    function drawAccumulatedArea(ctx, xToPx, yToPx) {
-      const x0 = 0;
-      const x1 = state.x;
-      const left = Math.min(x0, x1);
-      const right = Math.max(x0, x1);
-      const samples = 260;
+      <section class="view" id="graph3">
+        <iframe src="interactive_graph_3.html" title="f(x) = x² + 5x + 6"></iframe>
+      </section>
+    </main>
 
-      if (Math.abs(right - left) < 1e-12) return;
+    <script>
+      const buttons = document.querySelectorAll("[data-page]");
+      const tabButtons = document.querySelectorAll(".tab");
+      const views = document.querySelectorAll(".view");
 
-      ctx.beginPath();
-      ctx.moveTo(xToPx(left), yToPx(0));
+      function showPage(pageId) {
+        tabButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.page === pageId);
+        });
 
-      for (let i = 0; i <= samples; i++) {
-        const x = left + ((right - left) * i) / samples;
-        ctx.lineTo(xToPx(x), yToPx(f(x)));
+        views.forEach((view) => {
+          view.classList.toggle("active", view.id === pageId);
+        });
       }
 
-      ctx.lineTo(xToPx(right), yToPx(0));
-      ctx.closePath();
-      ctx.fillStyle = "rgba(16, 185, 129, 0.20)";
-      ctx.fill();
-    }
-
-    function drawAxesAndLabels(ctx, xToPx, yToPx, xMin, xMax, yMin, yMax, width, height, margin) {
-      const xStep = niceStep(xMax - xMin);
-      const yStep = niceStep(yMax - yMin);
-
-      ctx.save();
-      ctx.font = "12px system-ui, sans-serif";
-      ctx.fillStyle = "#64748b";
-      ctx.strokeStyle = "#64748b";
-      ctx.lineWidth = 1.4;
-      ctx.setLineDash([]);
-
-      // แกน x
-      const axisYPx = (0 >= yMin && 0 <= yMax) ? yToPx(0) : height - margin.bottom;
-      ctx.beginPath();
-      ctx.moveTo(margin.left, axisYPx);
-      ctx.lineTo(width - margin.right, axisYPx);
-      ctx.stroke();
-
-      // แกน y
-      const axisXPx = (0 >= xMin && 0 <= xMax) ? xToPx(0) : margin.left;
-      ctx.beginPath();
-      ctx.moveTo(axisXPx, margin.top);
-      ctx.lineTo(axisXPx, height - margin.bottom);
-      ctx.stroke();
-
-      // ตัวเลขบนแกน x
-      ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-      for (let x = Math.ceil(xMin / xStep) * xStep; x <= xMax + 1e-10; x += xStep) {
-        const px = xToPx(x);
-        ctx.fillText(formatTick(x), px, height - margin.bottom + 7);
-      }
-
-      // ตัวเลขบนแกน y
-      ctx.textAlign = "right";
-      ctx.textBaseline = "middle";
-      for (let y = Math.ceil(yMin / yStep) * yStep; y <= yMax + 1e-10; y += yStep) {
-        const py = yToPx(y);
-        ctx.fillText(formatTick(y), margin.left - 8, py);
-      }
-
-      ctx.restore();
-    }
-
-    function formatTick(value) {
-      const v = Math.abs(value) < 1e-10 ? 0 : value;
-      if (Math.abs(v) >= 1000 || (Math.abs(v) > 0 && Math.abs(v) < 0.01)) {
-        return v.toExponential(1);
-      }
-      return Number(v.toFixed(2)).toString();
-    }
-
-    function updateStats() {
-      $("xBadge").textContent = formatNumber(state.x);
-      $("statX").textContent = formatNumber(state.x);
-      $("statFx").textContent = formatNumber(f(state.x));
-      $("statDfx").textContent = formatNumber(df(state.x));
-      $("statArea").textContent = formatNumber(accumulatedArea(state.x));
-    }
-
-    function drawAll() {
-      updateStats();
-      drawGraph(graphConfigs.f, { tangent: true, area: true });
-      drawGraph(graphConfigs.d);
-      drawGraph(graphConfigs.i);
-    }
-
-    function syncSliderSettings() {
-      const minInput = $("sliderMin");
-      const maxInput = $("sliderMax");
-      const stepInput = $("sliderStep");
-      const slider = $("xSlider");
-
-      let min = readNumber(minInput, -10);
-      let max = readNumber(maxInput, 10);
-      let step = readNumber(stepInput, 0.1);
-
-      if (max <= min) max = min + 1;
-      if (step <= 0) step = 0.1;
-
-      minInput.value = min;
-      maxInput.value = max;
-      stepInput.value = step;
-
-      slider.min = String(min);
-      slider.max = String(max);
-      slider.step = String(step);
-
-      state.x = Math.min(max, Math.max(min, state.x));
-      slider.value = String(state.x);
-      drawAll();
-    }
-
-    $("xSlider").addEventListener("input", (event) => {
-      state.x = Number(event.target.value);
-      drawAll();
-    });
-
-    ["sliderMin", "sliderMax", "sliderStep"].forEach((id) => {
-      $(id).addEventListener("change", syncSliderSettings);
-    });
-
-    document.querySelectorAll(".axis-controls input").forEach((input) => {
-      input.addEventListener("input", drawAll);
-      input.addEventListener("change", drawAll);
-    });
-
-    $("toggleTangent").addEventListener("click", () => {
-      state.showTangent = !state.showTangent;
-      const button = $("toggleTangent");
-      button.className = `toggle ${state.showTangent ? "on" : "off"}`;
-      button.textContent = `เส้นสัมผัส / ความชัน: ${state.showTangent ? "เปิด" : "ปิด"}`;
-      drawAll();
-    });
-
-    $("toggleArea").addEventListener("click", () => {
-      state.showArea = !state.showArea;
-      const button = $("toggleArea");
-      button.className = `toggle ${state.showArea ? "on" : "off"}`;
-      button.textContent = `พื้นที่สะสม: ${state.showArea ? "เปิด" : "ปิด"}`;
-      drawAll();
-    });
-
-    $("resetView").addEventListener("click", () => {
-      const defaults = {
-        fXMin: -10, fXMax: 10, fYMin: -10, fYMax: 60,
-        dXMin: -10, dXMax: 10, dYMin: -20, dYMax: 30,
-        iXMin: -10, iXMax: 10, iYMin: -120, iYMax: 650
-      };
-
-      Object.entries(defaults).forEach(([id, value]) => {
-        $(id).value = value;
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => showPage(button.dataset.page));
       });
-
-      drawAll();
-    });
-
-    // วาดกราฟใหม่อัตโนมัติเมื่อขนาดหน้าต่างเปลี่ยน
-    window.addEventListener("resize", drawAll);
-
-    syncSliderSettings();
-  </script>
-</body>
+    </script>
+  </body>
 </html>
